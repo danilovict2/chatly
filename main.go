@@ -5,19 +5,18 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/danilovict2/go-real-time-chat/controllers"
 	"github.com/go-chi/chi/v5"
 	"github.com/joho/godotenv"
 )
 
 func main() {
 	if err := godotenv.Load(); err != nil {
-		log.Fatal(err)	
+		log.Fatal(err)
 	}
 
 	router := chi.NewRouter()
-	router.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Welcome"))
-	})
+	router.Get("/", controllers.Make(controllers.HomeIndex))
 
 	listenAddr := os.Getenv("LISTEN_ADDR")
 	log.Println("Listening on port", listenAddr)
