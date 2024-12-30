@@ -16,6 +16,8 @@ func main() {
 	}
 
 	router := chi.NewRouter()
+	router.Handle("/public/*", http.StripPrefix("/public/", http.FileServerFS(os.DirFS("public"))))
+	
 	router.Get("/", controllers.Make(controllers.HomeIndex))
 
 	listenAddr := os.Getenv("LISTEN_ADDR")
