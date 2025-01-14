@@ -46,9 +46,53 @@ func Register(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	db.Create(&user)
+	err = setJWTCookie(user.ID, w)
+	if err != nil {
+		return err
+	}
 
+	http.Redirect(w, r, "/protected", http.StatusFound)
+	return nil
+}
+
+func LoginForm(w http.ResponseWriter, r *http.Request) error {
+	return Render(w, r, auth.Login())
+}
+
+func Login(w http.ResponseWriter, r *http.Request) error {
+	err := r.ParseForm()
+	if err != nil {
+		return err
+	}
+
+	db, err := database.NewConnection()
+	if err != nil {
+		return err
+	}
+
+	user := models.User{}
+	if err := db.Where("email = ?", r.PostFormValue("email")).First(&user).Error; err != nil {
+		// TODO: Implement error handling
+		return err
+	}
+
+	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(r.PostFormValue("password"))); err != nil {
+		// TODO: Implement error handling
+		return err
+	}
+
+	err = setJWTCookie(user.ID, w)
+	if err != nil {
+		return err
+	}
+
+	http.Redirect(w, r, "/protected", http.StatusFound)
+	return nil
+}
+
+func setJWTCookie(userID uint, w http.ResponseWriter) error {
 	tokenAuth := jwt.NewAuth()
-	_, tokenString, err := tokenAuth.Encode(map[string]interface{}{"user_id": user.ID})
+	_, tokenString, err := tokenAuth.Encode(map[string]interface{}{"user_id": userID})
 	if err != nil {
 		return err
 	}
@@ -62,7 +106,5 @@ func Register(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	http.SetCookie(w, &cookie)
-	http.Redirect(w, r, "/protected", http.StatusFound)
-
 	return nil
 }
