@@ -5,8 +5,10 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/danilovict2/go-real-time-chat/jwt"
 	"github.com/danilovict2/go-real-time-chat/controllers"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/jwtauth/v5"
 	"github.com/joho/godotenv"
 )
 
@@ -23,14 +25,29 @@ func NewServer() Server {
 func router() chi.Router {
 	r := chi.NewRouter()
 	r.Handle("/public/*", http.StripPrefix("/public/", http.FileServerFS(os.DirFS("/public/"))))
+	
+	tokenAuth := jwt.NewAuth()
 
-	// Auth routes
+	// Protected routes
 	r.Group(func(r chi.Router) {
-		r.Get("/register", controllers.Make(controllers.RegisterForm))
-		r.Post("/register", controllers.Make(controllers.Register))
+		r.Use(jwtauth.Verifier(tokenAuth))
+		r.Use(jwtauth.Authenticator(tokenAuth))
+
+		r.Get("/protected", func(w http.ResponseWriter, r *http.Request) {
+			w.Write([]byte("Protected route"))
+		})
 	})
 
-	r.Get("/", controllers.Make(controllers.HomeIndex))
+	// Public routes
+	r.Group(func(r chi.Router) {
+		r.Get("/", controllers.Make(controllers.HomeIndex))
+
+		// Auth routes
+		r.Group(func(r chi.Router) {
+			r.Get("/register", controllers.Make(controllers.RegisterForm))
+			r.Post("/register", controllers.Make(controllers.Register))
+		})
+	})
 
 	return r
 }
