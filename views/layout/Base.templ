@@ -1,5 +1,7 @@
 package layout
 
+import "github.com/danilovict2/go-real-time-chat/views/components"
+
 templ Base() {
 	<!DOCTYPE html>
 	<html lang="en">
@@ -11,6 +13,7 @@ templ Base() {
 			<link href="/public/index.css" rel="stylesheet">
 		</head>
 		<body>
+			@components.Navbar()
 			{ children... }
 		</body>
 	</html>
