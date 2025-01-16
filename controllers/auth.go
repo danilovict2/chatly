@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"net/http"
 	"time"
 
@@ -9,11 +8,20 @@ import (
 	"github.com/danilovict2/go-real-time-chat/jwt"
 	"github.com/danilovict2/go-real-time-chat/models"
 	"github.com/danilovict2/go-real-time-chat/views/auth"
+	"github.com/go-chi/jwtauth/v5"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func RegisterForm(w http.ResponseWriter, r *http.Request) error {
-	return Render(w, r, auth.Register())
+	token := jwtauth.TokenFromCookie(r)
+	// Prevent authenticated users from accesing register
+	if token != "" {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return nil
+	}
+
+	errorMessage := r.URL.Query().Get("error_message")
+	return Render(w, r, auth.Register(errorMessage))
 }
 
 func Register(w http.ResponseWriter, r *http.Request) error {
@@ -27,22 +35,20 @@ func Register(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	password, err := bcrypt.GenerateFromPassword([]byte(r.PostFormValue("password")), bcrypt.DefaultCost)
-	if err != nil {
-		return err
-	}
-
 	user := models.User{
 		Username: r.PostFormValue("username"),
 		Email:    r.PostFormValue("email"),
-		Password: password,
+		Password: []byte(r.PostFormValue("password")),
 	}
 
-	if valid, err := user.IsValid(db); !valid {
-		// TODO: Implement error handling
-		fmt.Println(err)
-		http.Redirect(w, r, "/", http.StatusFound)
+	if valid, reason := user.IsValid(db); !valid {
+		http.Redirect(w, r, "/register?error_message=" + reason, http.StatusFound)
 		return nil
+	}
+
+	user.Password, err = bcrypt.GenerateFromPassword(user.Password, bcrypt.DefaultCost)
+	if err != nil {
+		return err
 	}
 
 	db.Create(&user)
@@ -51,11 +57,18 @@ func Register(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	http.Redirect(w, r, "/protected", http.StatusFound)
+	http.Redirect(w, r, "/protected", http.StatusFound)	
 	return nil
 }
 
 func LoginForm(w http.ResponseWriter, r *http.Request) error {
+	token := jwtauth.TokenFromCookie(r)
+	// Prevent authenticated users from accesing login
+	if token != "" {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return nil
+	}
+
 	return Render(w, r, auth.Login())
 }
 

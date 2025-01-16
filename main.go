@@ -24,7 +24,7 @@ func NewServer() Server {
 
 func router() chi.Router {
 	r := chi.NewRouter()
-	r.Handle("/public/*", http.StripPrefix("/public/", http.FileServerFS(os.DirFS("/public/"))))
+	r.Handle("/public/*", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 
 	tokenAuth := jwt.NewAuth()
 

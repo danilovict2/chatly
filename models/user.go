@@ -1,9 +1,6 @@
 package models
 
 import (
-	"errors"
-	"fmt"
-
 	"gorm.io/gorm"
 )
 
@@ -14,14 +11,19 @@ type User struct {
 	Password []byte
 }
 
-func (user User) IsValid(db *gorm.DB) (valid bool, invalidReason error) {
-	if err := db.Where("username = ?", user.Username).First(&User{}).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return false, fmt.Errorf("User with this username already exists")
+func (user User) IsValid(db *gorm.DB) (valid bool, invalidReason string) {
+	switch {
+	case len(user.Username) == 0:
+		return false, "Username is required"
+	case len(user.Email) == 0:
+		return false, "Email is required"
+	case len(user.Password) < 8:
+		return false, "Password must be longer than 8 characters"
+	case db.Where("email = ?", user.Email).First(&User{}).Error == nil:
+		return false, "User with this email already exists"
+	case db.Where("username = ?", user.Username).First(&User{}).Error == nil:
+		return false, "User with this username already exists"
+	default:
+		return true, ""
 	}
-
-	if err := db.Where("email = ?", user.Email).First(&User{}).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-		return false, fmt.Errorf("User with this email already exists")
-	}
-
-	return true, nil
 }
