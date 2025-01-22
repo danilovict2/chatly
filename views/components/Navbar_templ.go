@@ -31,7 +31,7 @@ func Navbar(user *models.User) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<header class=\"bg-base-100 border-b border-base-300 fixed w-full top-0 z-40 backdrop-blur-lg bg-base-100/80\"><div class=\"container mx-auto px-4 h-16\"><div class=\"flex items-center justify-between h-full\"><a href=\"/\" class=\"flex items-center gap-2.5 hover:opacity-80 transition-all\"><div class=\"size-9 rounded-lg bg-primary-10 flex items-center justify-center\"><i class=\"fa-regular fa-message size-5 text-primary\"></i></div><h1 class=\"text-lg font-bold\">Chat app</h1></a><div class=\"flex items-center gap-2\"><a href=\"#\" class=\"btn btn-sm gap-2 transition-colors\"><i class=\"fa-solid fa-gear size-4\"></i> <span class=\"hidden sm:inline\">Settings</span></a> ")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<header class=\"bg-base-100 border-b border-base-300 fixed w-full top-0 z-40 backdrop-blur-lg bg-base-100/80\"><div class=\"container mx-auto px-4 h-16\"><div class=\"flex items-center justify-between h-full\"><a href=\"/\" class=\"flex items-center gap-2.5 hover:opacity-80 transition-all\"><div class=\"size-9 rounded-lg bg-primary-10 flex items-center justify-center\"><i class=\"fa-regular fa-message size-5 text-primary\"></i></div><h1 class=\"text-lg font-bold\">Chat app</h1></a><div class=\"flex items-center gap-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
