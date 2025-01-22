@@ -1,9 +1,10 @@
 package home
 
 import "github.com/danilovict2/go-real-time-chat/views/layout"
+import "github.com/danilovict2/go-real-time-chat/models"
 
-templ Home() {
-	@layout.Base() {
+templ Home(user *models.User) {
+	@layout.Base(user) {
 		<div>
 			
 		</div>
