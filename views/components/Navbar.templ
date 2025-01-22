@@ -19,6 +19,8 @@ templ Navbar(user *models.User) {
 							<span class="hidden sm:inline">Profile</span>
 						</a>
 						<form action="/logout" method="POST">
+							@CSRF()
+							
 							<button class="flex gap-2 items-center">
 								<i class="fa-solid fa-arrow-right-from-bracket size-5"></i>
 								<span class="hidden sm:inline">Logout</span>

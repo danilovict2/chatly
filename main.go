@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/rand"
 	"log"
 	"net/http"
 	"os"
@@ -10,6 +11,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/jwtauth/v5"
+	"github.com/gorilla/csrf"
 	"github.com/joho/godotenv"
 )
 
@@ -30,6 +32,7 @@ func router() chi.Router {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(controllers.UserFromJWTMiddleware)
+	r.Use(csrf.Protect(mustGenerateCSRFKey()))
 
 	r.Handle("/public/*", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 
@@ -62,6 +65,18 @@ func router() chi.Router {
 	})
 
 	return r
+}
+
+func mustGenerateCSRFKey() (key []byte) {
+	key = make([]byte, 32)
+	n, err := rand.Read(key)
+	if err != nil {
+		panic(err)
+	}
+	if n != 32 {
+		panic("unable to read 32 bytes for CSRF key")
+	}
+	return
 }
 
 func main() {

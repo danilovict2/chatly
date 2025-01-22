@@ -36,12 +36,20 @@ func Navbar(user *models.User) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if user != nil {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<a href=\"#\" class=\"btn btn-sm gap-2\"><i class=\"fa-solid fa-user size-5\"></i> <span class=\"hidden sm:inline\">Profile</span></a><form action=\"/logout\" method=\"POST\"><button class=\"flex gap-2 items-center\"><i class=\"fa-solid fa-arrow-right-from-bracket size-5\"></i> <span class=\"hidden sm:inline\">Logout</span></button></form>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<a href=\"#\" class=\"btn btn-sm gap-2\"><i class=\"fa-solid fa-user size-5\"></i> <span class=\"hidden sm:inline\">Profile</span></a><form action=\"/logout\" method=\"POST\">")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = CSRF().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<button class=\"flex gap-2 items-center\"><i class=\"fa-solid fa-arrow-right-from-bracket size-5\"></i> <span class=\"hidden sm:inline\">Logout</span></button></form>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "</div></div></div></header>")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</div></div></div></header>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
