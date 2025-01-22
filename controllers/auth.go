@@ -12,6 +12,8 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+const DefaultJWTExpiration time.Duration = time.Hour * 24 * 7
+
 func RegisterForm(w http.ResponseWriter, r *http.Request) error {
 	token := jwtauth.TokenFromCookie(r)
 	// Prevent authenticated users from accesing register
@@ -41,7 +43,7 @@ func Register(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	if valid, reason := user.IsValid(db); !valid {
-		http.Redirect(w, r, "/register?error_message=" + reason, http.StatusFound)
+		http.Redirect(w, r, "/register?error_message="+reason, http.StatusFound)
 		return nil
 	}
 
@@ -51,12 +53,12 @@ func Register(w http.ResponseWriter, r *http.Request) error {
 	}
 
 	db.Create(&user)
-	err = setJWTCookie(user.ID, w)
+	err = setJWTCookie(user.ID, time.Now().Add(DefaultJWTExpiration), w)
 	if err != nil {
 		return err
 	}
 
-	http.Redirect(w, r, "/protected", http.StatusFound)	
+	http.Redirect(w, r, "/protected", http.StatusFound)
 	return nil
 }
 
@@ -92,7 +94,7 @@ func Login(w http.ResponseWriter, r *http.Request) error {
 		return err
 	}
 
-	err = setJWTCookie(user.ID, w)
+	err = setJWTCookie(user.ID, time.Now().Add(DefaultJWTExpiration), w)
 	if err != nil {
 		return err
 	}
@@ -101,7 +103,7 @@ func Login(w http.ResponseWriter, r *http.Request) error {
 	return nil
 }
 
-func setJWTCookie(userID uint, w http.ResponseWriter) error {
+func setJWTCookie(userID uint, expires time.Time, w http.ResponseWriter) error {
 	tokenAuth := jwt.NewAuth()
 	_, tokenString, err := tokenAuth.Encode(map[string]interface{}{"user_id": userID})
 	if err != nil {
@@ -111,7 +113,7 @@ func setJWTCookie(userID uint, w http.ResponseWriter) error {
 	cookie := http.Cookie{
 		Name:     "jwt",
 		Value:    tokenString,
-		Expires:  time.Now().Add(time.Hour * 24 * 7),
+		Expires:  expires,
 		Secure:   true,
 		HttpOnly: true,
 	}
@@ -121,14 +123,8 @@ func setJWTCookie(userID uint, w http.ResponseWriter) error {
 }
 
 func Logout(w http.ResponseWriter, r *http.Request) error {
-	cookie := http.Cookie{
-		Name:     "jwt",
-		Value:    "",
-		Expires:  time.Now(),
-		Secure:   true,
-		HttpOnly: true,
-	}
+	setJWTCookie(0, time.Now(), w)
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 
-	http.SetCookie(w, &cookie)
 	return nil
 }

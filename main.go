@@ -57,7 +57,7 @@ func router() chi.Router {
 			r.Get("/login", controllers.Make(controllers.LoginForm))
 			r.Post("/login", controllers.Make(controllers.Login))
 
-			r.Get("/logout", controllers.Make(controllers.Logout))
+			r.Post("/logout", controllers.Make(controllers.Logout))
 		})
 	})
 
