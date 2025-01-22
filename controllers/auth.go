@@ -25,8 +25,7 @@ func RegisterForm(w http.ResponseWriter, r *http.Request) error {
 }
 
 func Register(w http.ResponseWriter, r *http.Request) error {
-	err := r.ParseForm()
-	if err != nil {
+	if err := r.ParseForm(); err != nil {
 		return err
 	}
 
@@ -73,8 +72,7 @@ func LoginForm(w http.ResponseWriter, r *http.Request) error {
 }
 
 func Login(w http.ResponseWriter, r *http.Request) error {
-	err := r.ParseForm()
-	if err != nil {
+	if err := r.ParseForm(); err != nil {
 		return err
 	}
 
@@ -114,6 +112,19 @@ func setJWTCookie(userID uint, w http.ResponseWriter) error {
 		Name:     "jwt",
 		Value:    tokenString,
 		Expires:  time.Now().Add(time.Hour * 24 * 7),
+		Secure:   true,
+		HttpOnly: true,
+	}
+
+	http.SetCookie(w, &cookie)
+	return nil
+}
+
+func Logout(w http.ResponseWriter, r *http.Request) error {
+	cookie := http.Cookie{
+		Name:     "jwt",
+		Value:    "",
+		Expires:  time.Now(),
 		Secure:   true,
 		HttpOnly: true,
 	}

@@ -8,6 +8,7 @@ import (
 	"github.com/danilovict2/go-real-time-chat/controllers"
 	"github.com/danilovict2/go-real-time-chat/jwt"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/jwtauth/v5"
 	"github.com/joho/godotenv"
 )
@@ -24,6 +25,12 @@ func NewServer() Server {
 
 func router() chi.Router {
 	r := chi.NewRouter()
+	r.Use(middleware.RequestID)
+	r.Use(middleware.RealIP)
+	r.Use(middleware.Logger)
+	r.Use(middleware.Recoverer)
+	r.Use(controllers.UserFromJWTMiddleware)
+
 	r.Handle("/public/*", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 
 	tokenAuth := jwt.NewAuth()
@@ -49,6 +56,8 @@ func router() chi.Router {
 
 			r.Get("/login", controllers.Make(controllers.LoginForm))
 			r.Post("/login", controllers.Make(controllers.Login))
+
+			r.Get("/logout", controllers.Make(controllers.Logout))
 		})
 	})
 
