@@ -1,12 +1,21 @@
 package home
 
-import "github.com/danilovict2/go-real-time-chat/views/layout"
-import "github.com/danilovict2/go-real-time-chat/models"
+import (
+	"github.com/danilovict2/go-real-time-chat/models"
+	"github.com/danilovict2/go-real-time-chat/views/components"
+	"github.com/danilovict2/go-real-time-chat/views/layout"
+)
 
-templ Home(user *models.User) {
-	@layout.Base(user) {
-		<div>
-			
+templ Home(authUser *models.User, users []models.User) {
+	@layout.Base(authUser) {
+		<div class="h-screen bg-base-200">
+			<div class="flex items-center justify-center pt-20 px-4">
+				<div class="bg-base-100 rounded-lg shadow-cl w-full max-w-6xl h-[calc(100vh-8rem)]">
+					<div class="flex h-full rounded-lg overflow-hidden">
+						@components.Sidebar(users)
+					</div>
+				</div>
+			</div>
 		</div>
 	}
 }

@@ -1,0 +1,41 @@
+package components
+
+import "github.com/danilovict2/go-real-time-chat/models"
+
+templ Sidebar(users []models.User) {
+	<aside class="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
+		<div class="border-b border-base-300 w-full p-5">
+			<div class="flex items-center gap-2">
+				<i class="fa-solid fa-users size-6"></i>
+				<span class="font-medium hidden lg:block">Contacts</span>
+			</div>
+		</div>
+		<div class="overflow-y-auto w-full py-3">
+			for _, user := range users {
+				<button class="w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors">
+					<div class="relative mx-auto lg:mx-0">
+						if user.Avatar != nil {
+							<img
+								src={ *user.Avatar }
+								alt={ user.Username }
+								class="size-12 object-cover rounded-full"
+							/>
+						} else {
+							<img
+								src="/public/img/avatar.png"
+								alt={ user.Username }
+								class="size-12 object-cover rounded-full"
+							/>
+						}
+					</div>
+					<div class="hidden lg:block text-left min-w-0">
+						<div class="font-medium truncate">{ user.Username }</div>
+						<div class="text-sm text-zinc-400">
+							Offline
+						</div>
+					</div>
+				</button>
+			}
+		</div>
+	</aside>
+}

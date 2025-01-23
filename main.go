@@ -45,12 +45,12 @@ func router() chi.Router {
 
 		r.Get("/profile", controllers.Make(controllers.ProfileShow))
 		r.Post("/profile/update", controllers.Make(controllers.ProfileUpdate))
+
+		r.Get("/", controllers.Make(controllers.HomeIndex))
 	})
 
 	// Public routes
 	r.Group(func(r chi.Router) {
-		r.Get("/", controllers.Make(controllers.HomeIndex))
-
 		// Auth routes
 		r.Group(func(r chi.Router) {
 			r.Get("/register", controllers.Make(controllers.RegisterForm))
