@@ -43,9 +43,7 @@ func router() chi.Router {
 		r.Use(jwtauth.Verifier(tokenAuth))
 		r.Use(controllers.Authenticator("/login"))
 
-		r.Get("/protected", func(w http.ResponseWriter, r *http.Request) {
-			w.Write([]byte("Protected route"))
-		})
+		r.Get("/profile", controllers.Make(controllers.ProfileShow))
 	})
 
 	// Public routes

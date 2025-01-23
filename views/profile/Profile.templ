@@ -1,0 +1,74 @@
+package profile
+
+import (
+	"github.com/danilovict2/go-real-time-chat/models"
+	"github.com/danilovict2/go-real-time-chat/views/layout"
+)
+
+templ Profile(user models.User) {
+	@layout.Base(&user) {
+		<div class="h-screen pt-20">
+			<div class="max-w-2xl mx-auto p-4 py-8">
+				<div class="bg-base-300 rounded-xl p-6 space-y-8">
+					<div class="text-center">
+						<h1 class="text-2xl font-semibold">Profile</h1>
+						<p class="mt-2">Your profile information</p>
+					</div>
+					<div class="flex flex-col items-center gap-4">
+						<div class="relative">
+							<img
+								src="/public/img/avatar.png"
+								alt="Profile"
+								class="size-32 rounded-full object-cover border-4"
+							/>
+							<label
+								for="avatar-upload"
+								class="absolute bottom-0 right-0 bg-base-content hover:scale-105 p-2 rounded-full cursor-pointer transition-all duration-200"
+							>
+								<i class="fa-solid fa-camera size-5 text-base-200 text-center"></i>
+								<input
+									type="file"
+									id="avatar-upload"
+									class="hidden"
+									accept="image/png, image/jpeg, image/jpg"
+								/>
+							</label>
+						</div>
+						<p class="text-sm text-zinc-400">
+							Click the camera icon to update your photo
+						</p>
+					</div>
+					<div class="space-y-6">
+						<div class="space-y-1.5">
+							<div class="text-sm text-zinc-400 flex items-center gap-2">
+								<i class="fa-solid fa-user size-4"></i>
+								Username
+							</div>
+							<p class="px-4 py-2.5 bg-base-200 rounded-lg border">{ user.Username }</p>
+						</div>
+						<div class="space-y-1.5">
+							<div class="text-sm text-zinc-400 flex items-center gap-2">
+								<i class="fa-regular fa-envelope size-4"></i>
+								Email Address
+							</div>
+							<p class="px-4 py-2.5 bg-base-200 rounded-lg border">{ user.Email }</p>
+						</div>
+					</div>
+					<div class="mt-6 bg-base-300 rounded-xl p-6">
+						<h2 class="text-lg font-medium  mb-4">Account Information</h2>
+						<div class="space-y-3 text-sm">
+							<div class="flex items-center justify-between py-2 border-b border-zinc-700">
+								<span>Member Since</span>
+								<span>{ user.CreatedAt.Format("2006-01-02") }</span>
+							</div>
+							<div class="flex items-center justify-between py-2">
+								<span>Account Status</span>
+								<span class="text-green-500">Active</span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}

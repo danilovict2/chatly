@@ -36,7 +36,7 @@ func Navbar(user *models.User) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if user != nil {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<a href=\"#\" class=\"btn btn-sm gap-2\"><i class=\"fa-solid fa-user size-5\"></i> <span class=\"hidden sm:inline\">Profile</span></a><form action=\"/logout\" method=\"POST\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<a href=\"/profile\" class=\"btn btn-sm gap-2\"><i class=\"fa-solid fa-user size-5\"></i> <span class=\"hidden sm:inline\">Profile</span></a><form action=\"/logout\" method=\"POST\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
