@@ -1,0 +1,28 @@
+package components
+
+templ Chat() {
+	<div class="flex-1 flex flex-col overflow-auto">
+		@ChatHeader()
+		<div class="flex-1 overflow-y-auto p-4 space-y-4">
+			<div class="chat chat-start">
+				<div class="chat-image avatar">
+					<div class="size-10 rounded-full border">
+						<img
+							src="/public/img/avatar.png"
+							alt="profile pic"
+						/>
+					</div>
+				</div>
+				<div class="chat-header mb-1">
+					<time class="text-xs opacity-50 ml-1">
+						createdAt
+					</time>
+				</div>
+				<div class="chat-bubble flex flex-col">
+					<p>message</p>
+				</div>
+			</div>
+		</div>
+		@MessageInput()
+	</div>
+}

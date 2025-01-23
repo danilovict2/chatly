@@ -1,0 +1,32 @@
+package components
+
+templ MessageInput() {
+	<div class="p-4 w-full">
+		<form class="flex items-center gap-2">
+			<div class="flex-1 flex gap-2">
+				<input
+					type="text"
+					class="w-full input input-bordered rounded-lg input-sm sm:input-md"
+					placeholder="Type a message..."
+				/>
+				<input
+					type="file"
+					accept="image/*"
+					class="hidden"
+				/>
+				<button
+					type="button"
+					class="hidden sm:flex btn btn-sm btn-circle mt-2"
+				>
+					<i class="fa-solid fa-image text-zinc-400"></i>
+				</button>
+			</div>
+			<button
+				type="submit"
+				class="btn btn-sm btn-circle"
+			>
+				<i class="fa-solid fa-paper-plane"></i>
+			</button>
+		</form>
+	</div>
+}
