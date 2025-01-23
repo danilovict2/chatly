@@ -44,6 +44,7 @@ func router() chi.Router {
 		r.Use(controllers.Authenticator("/login"))
 
 		r.Get("/profile", controllers.Make(controllers.ProfileShow))
+		r.Post("/profile/update", controllers.Make(controllers.ProfileUpdate))
 	})
 
 	// Public routes

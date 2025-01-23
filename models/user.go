@@ -9,6 +9,7 @@ type User struct {
 	Username string `gorm:"uniqueIndex"`
 	Email    string `gorm:"uniqueIndex"`
 	Password []byte
+	Avatar   *string
 }
 
 func (user User) IsValid(db *gorm.DB) (valid bool, invalidReason string) {

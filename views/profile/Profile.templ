@@ -3,6 +3,7 @@ package profile
 import (
 	"github.com/danilovict2/go-real-time-chat/models"
 	"github.com/danilovict2/go-real-time-chat/views/layout"
+	"github.com/danilovict2/go-real-time-chat/views/components"
 )
 
 templ Profile(user models.User) {
@@ -16,22 +17,35 @@ templ Profile(user models.User) {
 					</div>
 					<div class="flex flex-col items-center gap-4">
 						<div class="relative">
-							<img
-								src="/public/img/avatar.png"
-								alt="Profile"
-								class="size-32 rounded-full object-cover border-4"
-							/>
+							if user.Avatar != nil {
+								<img
+									src={ *user.Avatar }
+									alt="Profile"
+									class="size-32 rounded-full object-cover border-4"
+								/>
+							} else {
+								<img
+									src="/public/img/avatar.png"
+									alt="Profile"
+									class="size-32 rounded-full object-cover border-4"
+								/>
+							}
 							<label
 								for="avatar-upload"
 								class="absolute bottom-0 right-0 bg-base-content hover:scale-105 p-2 rounded-full cursor-pointer transition-all duration-200"
 							>
 								<i class="fa-solid fa-camera size-5 text-base-200 text-center"></i>
-								<input
-									type="file"
-									id="avatar-upload"
-									class="hidden"
-									accept="image/png, image/jpeg, image/jpg"
-								/>
+								<form method="POST" action="/profile/update" enctype="multipart/form-data">
+									@components.CSRF()
+									<input
+										type="file"
+										id="avatar-upload"
+										name="avatar"
+										class="hidden"
+										accept="image/png, image/jpg"
+										onchange="this.form.submit()"
+									/>
+								</form>
 							</label>
 						</div>
 						<p class="text-sm text-zinc-400">
