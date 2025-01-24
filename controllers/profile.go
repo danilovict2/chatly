@@ -14,28 +14,37 @@ import (
 	"github.com/danilovict2/go-real-time-chat/views/profile"
 )
 
-func ProfileShow(w http.ResponseWriter, r *http.Request) error {
+func ProfileShow(w http.ResponseWriter, r *http.Request) ControllerError {
 	user, _ := r.Context().Value(userContextKey).(*models.User)
 	return Render(w, r, profile.Profile(*user))
 }
 
-func ProfileUpdate(w http.ResponseWriter, r *http.Request) error {
+func ProfileUpdate(w http.ResponseWriter, r *http.Request) ControllerError {
 	const maxMemory = 1 << 20
 	if err := r.ParseMultipartForm(maxMemory); err != nil {
-		return err
+		return ControllerError{
+			err:  err,
+			code: http.StatusBadRequest,
+		}
 	}
-	
+
 	user, _ := r.Context().Value(userContextKey).(*models.User)
 	avatar, header, err := r.FormFile("avatar")
 	if err != nil {
-		return err
+		return ControllerError{
+			err:  err,
+			code: http.StatusBadRequest,
+		}
 	}
 	defer avatar.Close()
-	
+
 	allowedMimeTypes := []string{"image/png", "image/jpg"}
 	mimeType, _, err := mime.ParseMediaType(header.Header.Get("Content-Type"))
 	if err != nil || !slices.Contains(allowedMimeTypes, mimeType) {
-		return fmt.Errorf("invalid file extension")	
+		return ControllerError{
+			err:  fmt.Errorf("invalid file extension"),
+			code: http.StatusBadRequest,
+		}
 	}
 
 	ext := strings.Split(mimeType, "/")[1]
@@ -43,25 +52,37 @@ func ProfileUpdate(w http.ResponseWriter, r *http.Request) error {
 
 	file, err := os.Create(fName)
 	if err != nil {
-		return err
+		return ControllerError{
+			err:  err,
+			code: http.StatusInternalServerError,
+		}
 	}
 	defer file.Close()
 
 	if _, err := io.Copy(file, avatar); err != nil {
-		return err
+		return ControllerError{
+			err:  err,
+			code: http.StatusInternalServerError,
+		}
 	}
 
 	user.Avatar = &fName
 
 	db, err := database.NewConnection()
 	if err != nil {
-		return err
+		return ControllerError{
+			err:  err,
+			code: http.StatusInternalServerError,
+		}
 	}
 
 	if err := db.Save(user).Error; err != nil {
-		return err
+		return ControllerError{
+			err:  err,
+			code: http.StatusInternalServerError,
+		}
 	}
 
 	http.Redirect(w, r, "/profile", http.StatusSeeOther)
-	return nil
+	return ControllerError{}
 }

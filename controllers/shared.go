@@ -13,18 +13,42 @@ import (
 	"github.com/go-chi/jwtauth/v5"
 )
 
-type HTTPController func(w http.ResponseWriter, r *http.Request) error
+type ControllerError struct {
+	err  error
+	code int
+}
+
+type HTTPController func(w http.ResponseWriter, r *http.Request) ControllerError
 
 func Make(h HTTPController) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		if err := h(w, r); err != nil {
-			log.Fatal("HTTP controller error", err, "Path", r.URL.Path)
+		if controllerErr := h(w, r); controllerErr != (ControllerError{}) {
+			log.Println("HTTP controller error:", controllerErr.err, "Path:", r.URL.Path, "Status code:", controllerErr.code)
+
+			w.WriteHeader(controllerErr.code)
+			if controllerErr.code >= 500 {
+				_, err := w.Write([]byte("Whoops. Something went wrong."))
+				if err != nil {
+					log.Println("Write error:", err)
+					return
+				}
+			} else if controllerErr.code >= 400 {
+				out := fmt.Sprintf("There was an error with your request: %v", controllerErr.err)
+				_, err := w.Write([]byte(out))
+				if err != nil {
+					log.Println("Write error:", err)
+					return
+				}
+			}
 		}
 	}
 }
 
-func Render(w http.ResponseWriter, r *http.Request, c templ.Component) error {
-	return c.Render(r.Context(), w)
+func Render(w http.ResponseWriter, r *http.Request, c templ.Component) ControllerError {
+	return ControllerError{
+		err:  c.Render(r.Context(), w),
+		code: http.StatusInternalServerError,
+	}
 }
 
 func Authenticator(loginRoute string) func(http.Handler) http.Handler {

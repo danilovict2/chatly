@@ -14,26 +14,32 @@ import (
 
 const DefaultJWTExpiration time.Duration = time.Hour * 24 * 7
 
-func RegisterForm(w http.ResponseWriter, r *http.Request) error {
+func RegisterForm(w http.ResponseWriter, r *http.Request) ControllerError {
 	token := jwtauth.TokenFromCookie(r)
 	// Prevent authenticated users from accesing register
 	if token != "" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return nil
+		return ControllerError{}
 	}
 
 	errorMessage := r.URL.Query().Get("error_message")
 	return Render(w, r, auth.Register(errorMessage))
 }
 
-func Register(w http.ResponseWriter, r *http.Request) error {
+func Register(w http.ResponseWriter, r *http.Request) ControllerError {
 	if err := r.ParseForm(); err != nil {
-		return err
+		return ControllerError{
+			err:  err,
+			code: http.StatusBadRequest,
+		}
 	}
 
 	db, err := database.NewConnection()
 	if err != nil {
-		return err
+		return ControllerError{
+			err:  err,
+			code: http.StatusInternalServerError,
+		}
 	}
 
 	user := models.User{
@@ -44,63 +50,80 @@ func Register(w http.ResponseWriter, r *http.Request) error {
 
 	if valid, reason := user.IsValid(db); !valid {
 		http.Redirect(w, r, "/register?error_message="+reason, http.StatusFound)
-		return nil
+		return ControllerError{}
 	}
 
 	user.Password, err = bcrypt.GenerateFromPassword(user.Password, bcrypt.DefaultCost)
 	if err != nil {
-		return err
+		return ControllerError{
+			err:  err,
+			code: http.StatusInternalServerError,
+		}
 	}
 
 	db.Create(&user)
-	err = setJWTCookie(user.ID, time.Now().Add(DefaultJWTExpiration), w)
-	if err != nil {
-		return err
+	if err = setJWTCookie(user.ID, time.Now().Add(DefaultJWTExpiration), w); err != nil {
+		return ControllerError{
+			err:  err,
+			code: http.StatusBadRequest,
+		}
 	}
 
 	http.Redirect(w, r, "/protected", http.StatusFound)
-	return nil
+	return ControllerError{}
 }
 
-func LoginForm(w http.ResponseWriter, r *http.Request) error {
+func LoginForm(w http.ResponseWriter, r *http.Request) ControllerError {
 	token := jwtauth.TokenFromCookie(r)
 	// Prevent authenticated users from accesing login
 	if token != "" {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
-		return nil
+		return ControllerError{}
 	}
 
 	return Render(w, r, auth.Login())
 }
 
-func Login(w http.ResponseWriter, r *http.Request) error {
+func Login(w http.ResponseWriter, r *http.Request) ControllerError {
 	if err := r.ParseForm(); err != nil {
-		return err
+		return ControllerError{
+			err:  err,
+			code: http.StatusBadRequest,
+		}
 	}
 
 	db, err := database.NewConnection()
 	if err != nil {
-		return err
+		return ControllerError{
+			err:  err,
+			code: http.StatusInternalServerError,
+		}
 	}
 
 	user := models.User{}
 	if err := db.Where("email = ?", r.PostFormValue("email")).First(&user).Error; err != nil {
-		// TODO: Implement error handling
-		return err
+		return ControllerError{
+			err:  err,
+			code: http.StatusInternalServerError,
+		}
 	}
 
 	if err := bcrypt.CompareHashAndPassword(user.Password, []byte(r.PostFormValue("password"))); err != nil {
-		// TODO: Implement error handling
-		return err
+		return ControllerError{
+			err:  err,
+			code: http.StatusBadRequest,
+		}
 	}
 
-	err = setJWTCookie(user.ID, time.Now().Add(DefaultJWTExpiration), w)
-	if err != nil {
-		return err
+	if err = setJWTCookie(user.ID, time.Now().Add(DefaultJWTExpiration), w); err != nil {
+		return ControllerError{
+			err:  err,
+			code: http.StatusBadRequest,
+		}
 	}
 
 	http.Redirect(w, r, "/protected", http.StatusFound)
-	return nil
+	return ControllerError{}
 }
 
 func setJWTCookie(userID uint, expires time.Time, w http.ResponseWriter) error {
@@ -122,9 +145,9 @@ func setJWTCookie(userID uint, expires time.Time, w http.ResponseWriter) error {
 	return nil
 }
 
-func Logout(w http.ResponseWriter, r *http.Request) error {
+func Logout(w http.ResponseWriter, r *http.Request) ControllerError {
 	setJWTCookie(0, time.Now(), w)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 
-	return nil
+	return ControllerError{}
 }
