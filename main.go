@@ -7,7 +7,7 @@ import (
 	"os"
 
 	"github.com/danilovict2/go-real-time-chat/controllers"
-	"github.com/danilovict2/go-real-time-chat/jwt"
+	"github.com/danilovict2/go-real-time-chat/internal/jwt"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-chi/jwtauth/v5"

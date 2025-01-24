@@ -9,6 +9,6 @@ import (
 func NewAuth() *jwtauth.JWTAuth {
 	jwtSecret := os.Getenv("JWT_SECRET")
 	tokenAuth := jwtauth.New("HS256", []byte(jwtSecret), nil)
-
+	
 	return tokenAuth
 }

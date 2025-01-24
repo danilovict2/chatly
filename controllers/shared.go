@@ -8,7 +8,7 @@ import (
 
 	"github.com/a-h/templ"
 	"github.com/danilovict2/go-real-time-chat/internal/database"
-	"github.com/danilovict2/go-real-time-chat/jwt"
+	"github.com/danilovict2/go-real-time-chat/internal/jwt"
 	"github.com/danilovict2/go-real-time-chat/models"
 	"github.com/go-chi/jwtauth/v5"
 )
