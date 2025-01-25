@@ -50,7 +50,7 @@ func ProfileUpdate(w http.ResponseWriter, r *http.Request) ControllerError {
 	ext := strings.Split(mimeType, "/")[1]
 	fName := fmt.Sprintf("%s%s.%s", os.Getenv("IMG_ROOT"), user.Username, ext)
 
-	file, err := os.Create(fName)
+	file, err := os.Create("." + fName)
 	if err != nil {
 		return ControllerError{
 			err:  err,
