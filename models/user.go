@@ -1,15 +1,14 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
+import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Username string `gorm:"uniqueIndex"`
-	Email    string `gorm:"uniqueIndex"`
-	Password []byte
-	Avatar   *string
+	Username     string `gorm:"uniqueIndex"`
+	Email        string `gorm:"uniqueIndex"`
+	Password     []byte
+	Avatar       *string
+	ChatContacts []*User `gorm:"many2many:user_chat_contacts"`
 }
 
 func (user User) IsValid(db *gorm.DB) (valid bool, invalidReason string) {
