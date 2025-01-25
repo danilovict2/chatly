@@ -1,13 +1,17 @@
 package components
 
-templ MessageInput() {
+import "github.com/danilovict2/go-real-time-chat/models"
+
+templ MessageInput(receiver models.User) {
 	<div class="p-4 w-full">
-		<form class="flex items-center gap-2">
+		<form class="flex items-center gap-2" action={ templ.URL("/message/" + receiver.Username) } method="POST">
+			@CSRF()
 			<div class="flex-1 flex gap-2">
 				<input
 					type="text"
 					class="w-full input input-bordered rounded-lg input-sm sm:input-md"
 					placeholder="Type a message..."
+					name="message"
 				/>
 				<input
 					type="file"

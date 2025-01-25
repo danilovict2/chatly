@@ -2,29 +2,38 @@ package components
 
 import "github.com/danilovict2/go-real-time-chat/models"
 
-templ ChatContainer(selectedUser *models.User) {
+templ ChatContainer(sender, receiver models.User, messages []models.Message) {
 	<div class="flex-1 flex flex-col overflow-auto">
-		@ChatHeader(selectedUser)
+		@ChatHeader(receiver)
 		<div class="flex-1 overflow-y-auto p-4 space-y-4">
-			<div class="chat chat-start">
-				<div class="chat-image avatar">
-					<div class="size-10 rounded-full border">
-						<img
-							src={ Avatar(*selectedUser) }
-							alt={ selectedUser.Username }
-						/>
+			for _, message := range messages {
+				<div class={ "chat", templ.KV("chat-end", message.SenderID != receiver.ID), templ.KV("chat-start", message.SenderID == receiver.ID) }>
+					<div class="chat-image avatar">
+						<div class="size-10 rounded-full border">
+							if message.SenderID == receiver.ID {
+								<img
+									src={ Avatar(receiver) }
+									alt={ receiver.Username }
+								/>
+							} else {
+								<img
+									src={ Avatar(sender) }
+									alt={ sender.Username }
+								/>
+							}
+						</div>
+					</div>
+					<div class="chat-header mb-1">
+						<time class="text-xs opacity-50 ml-1">
+							{ message.CreatedAt.Format("2006-01-02") }
+						</time>
+					</div>
+					<div class="chat-bubble flex flex-col">
+						<p>{ message.Content }</p>
 					</div>
 				</div>
-				<div class="chat-header mb-1">
-					<time class="text-xs opacity-50 ml-1">
-						createdAt
-					</time>
-				</div>
-				<div class="chat-bubble flex flex-col">
-					<p>message</p>
-				</div>
-			</div>
+			}
 		</div>
-		@MessageInput()
+		@MessageInput(receiver)
 	</div>
 }

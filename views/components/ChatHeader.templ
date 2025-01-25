@@ -2,17 +2,17 @@ package components
 
 import "github.com/danilovict2/go-real-time-chat/models"
 
-templ ChatHeader(selectedUser *models.User) {
+templ ChatHeader(receiver models.User) {
 	<div class="p-2.5 border-b border-base-300">
 		<div class="flex items-center justify-between">
 			<div class="flex items-center gap-3">
 				<div class="avatar">
 					<div class="size-10 rounded-full relative">
-						<img src={ Avatar(*selectedUser) } alt={ selectedUser.Username }/>
+						<img src={ Avatar(receiver) } alt={ receiver.Username }/>
 					</div>
 				</div>
 				<div>
-					<h3 class="font-medium">{ selectedUser.Username }</h3>
+					<h3 class="font-medium">{ receiver.Username }</h3>
 					<p class="text-sm text-base-content/70">
 						Offline
 					</p>

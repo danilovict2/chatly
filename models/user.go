@@ -4,11 +4,13 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Username     string `gorm:"uniqueIndex"`
-	Email        string `gorm:"uniqueIndex"`
-	Password     []byte
-	Avatar       *string
-	ChatContacts []*User `gorm:"many2many:user_chat_contacts"`
+	Username         string `gorm:"uniqueIndex"`
+	Email            string `gorm:"uniqueIndex"`
+	Password         []byte
+	Avatar           *string
+	ChatContacts     []*User   `gorm:"many2many:user_chat_contacts"`
+	ReceivedMessages []Message `gorm:"foreignKey:ReceiverID"`
+	SentMessages     []Message `gorm:"foreignKey:SenderID"`
 }
 
 func (user User) IsValid(db *gorm.DB) (valid bool, invalidReason string) {
