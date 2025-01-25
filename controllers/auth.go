@@ -69,7 +69,7 @@ func Register(w http.ResponseWriter, r *http.Request) ControllerError {
 		}
 	}
 
-	http.Redirect(w, r, "/protected", http.StatusFound)
+	http.Redirect(w, r, "/", http.StatusFound)
 	return ControllerError{}
 }
 
@@ -122,7 +122,7 @@ func Login(w http.ResponseWriter, r *http.Request) ControllerError {
 		}
 	}
 
-	http.Redirect(w, r, "/protected", http.StatusFound)
+	http.Redirect(w, r, "/", http.StatusFound)
 	return ControllerError{}
 }
 
