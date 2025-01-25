@@ -1,7 +1,9 @@
 package layout
 
-import "github.com/danilovict2/go-real-time-chat/views/components"
-import "github.com/danilovict2/go-real-time-chat/models"
+import (
+	"github.com/danilovict2/go-real-time-chat/models"
+	"github.com/danilovict2/go-real-time-chat/views/components"
+)
 
 templ Base(user *models.User) {
 	<!DOCTYPE html>
@@ -11,9 +13,8 @@ templ Base(user *models.User) {
 			<link rel="icon" type="image/x-icon" href="/public/favicon.ico"/>
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-			<link href="/public/index.css" rel="stylesheet">
+			<link href="/public/index.css" rel="stylesheet"/>
 			<script src="https://kit.fontawesome.com/27c79d6f66.js" crossorigin="anonymous"></script>
-			<script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
 		</head>
 		<body>
 			@components.Navbar(user)

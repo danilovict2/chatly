@@ -1,15 +1,17 @@
 package components
 
-templ Chat() {
+import "github.com/danilovict2/go-real-time-chat/models"
+
+templ ChatContainer(selectedUser *models.User) {
 	<div class="flex-1 flex flex-col overflow-auto">
-		@ChatHeader()
+		@ChatHeader(selectedUser)
 		<div class="flex-1 overflow-y-auto p-4 space-y-4">
 			<div class="chat chat-start">
 				<div class="chat-image avatar">
 					<div class="size-10 rounded-full border">
 						<img
-							src="/public/img/avatar.png"
-							alt="profile pic"
+							src={ Avatar(*selectedUser) }
+							alt={ selectedUser.Username }
 						/>
 					</div>
 				</div>

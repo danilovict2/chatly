@@ -46,7 +46,8 @@ func router() chi.Router {
 		r.Get("/profile", controllers.Make(controllers.ProfileShow))
 		r.Post("/profile/update", controllers.Make(controllers.ProfileUpdate))
 
-		r.Get("/", controllers.Make(controllers.HomeIndex))
+		r.Get("/", controllers.Make(controllers.ChatShow))
+		r.Get("/chat/{username}", controllers.Make(controllers.ChatShow))
 	})
 
 	// Public routes

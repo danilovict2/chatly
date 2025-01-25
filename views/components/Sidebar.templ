@@ -1,6 +1,9 @@
 package components
 
-import "github.com/danilovict2/go-real-time-chat/models"
+import (
+	"github.com/danilovict2/go-real-time-chat/internal/database"
+	"github.com/danilovict2/go-real-time-chat/models"
+)
 
 func Avatar(user models.User) string {
 	if user.Avatar != nil {
@@ -10,7 +13,30 @@ func Avatar(user models.User) string {
 	return "/public/img/avatar.png"
 }
 
-templ Sidebar(users []models.User) {
+func FindUsers(authUser models.User) []models.User {
+	db, err := database.NewConnection()
+	if err != nil {
+		return []models.User{}
+	}
+
+	users := make([]models.User, 0)
+	if err := db.Where("id <> ?", authUser.ID).Find(&users).Error; err != nil {
+		return []models.User{}
+	}
+
+	return users
+}
+
+func IsSelectedUser(user models.User, selectedUser *models.User) bool {
+	if selectedUser != nil {
+		return user.ID == selectedUser.ID
+	}
+
+	return false
+}
+
+templ Sidebar(authUser models.User, selectedUser *models.User) {
+	{{ users := FindUsers(authUser) }}
 	<aside class="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
 		<div class="border-b border-base-300 w-full p-5">
 			<div class="flex items-center gap-2">
@@ -20,21 +46,26 @@ templ Sidebar(users []models.User) {
 		</div>
 		<div class="overflow-y-auto w-full py-3">
 			for _, user := range users {
-				<button class="w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors">
-					<div class="relative mx-auto lg:mx-0">
-						<img
-							src={ Avatar(user) }
-							alt={ user.Username }
-							class="size-12 object-cover rounded-full"
-						/>
-					</div>
-					<div class="hidden lg:block text-left min-w-0">
-						<div class="font-medium truncate">{ user.Username }</div>
-						<div class="text-sm text-zinc-400">
-							Offline
+				<form action={ templ.URL("/chat/" + user.Username) }>
+					<button
+						class={ "w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors", 
+							templ.KV("bg-base-300 ring-1 ring-base-300", IsSelectedUser(user, selectedUser)) }
+					>
+						<div class="relative mx-auto lg:mx-0">
+							<img
+								src={ Avatar(user) }
+								alt={ user.Username }
+								class="size-12 object-cover rounded-full"
+							/>
 						</div>
-					</div>
-				</button>
+						<div class="hidden lg:block text-left min-w-0">
+							<div class="font-medium truncate">{ user.Username }</div>
+							<div class="text-sm text-zinc-400">
+								Offline
+							</div>
+						</div>
+					</button>
+				</form>
 			}
 		</div>
 	</aside>

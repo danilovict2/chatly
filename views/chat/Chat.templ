@@ -1,0 +1,41 @@
+package chat
+
+import (
+	"github.com/danilovict2/go-real-time-chat/models"
+	"github.com/danilovict2/go-real-time-chat/views/components"
+	"github.com/danilovict2/go-real-time-chat/views/layout"
+)
+
+templ Chat(authUser *models.User, selectedUser *models.User) {
+	@layout.Base(authUser) {
+		<div class="h-screen bg-base-200">
+			<div class="flex items-center justify-center pt-20 px-4">
+				<div class="bg-base-100 rounded-lg shadow-cl w-full max-w-6xl h-[calc(100vh-8rem)]">
+					<div class="flex h-full rounded-lg overflow-hidden">
+						@components.Sidebar(*authUser, selectedUser)
+
+						if selectedUser != nil {
+							@components.ChatContainer(selectedUser)
+						} else {
+							<div class="w-full flex flex-1 flex-col items-center justify-center p-16 bg-base-100/50">
+								<div class="max-w-md text-center space-y-6">
+									<div class="flex justify-center gap-4 mb-4">
+										<div class="relative">
+											<div class="w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center animate-bounce">
+												<i class="fa-regular fa-message w-8 h-8 text-primary"></i>
+											</div>
+										</div>
+									</div>
+									<h2 class="text-2xl font-bold">Welcome to a Chat App!</h2>
+									<p class="text-base-content/60">
+										Select a conversation from the sidebar to start chatting
+									</p>
+								</div>
+							</div>
+						}
+					</div>
+				</div>
+			</div>
+		</div>
+	}
+}
