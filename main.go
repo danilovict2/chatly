@@ -32,7 +32,7 @@ func router() chi.Router {
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
 	r.Use(controllers.UserFromJWTMiddleware)
-	r.Use(csrf.Protect(mustGenerateCSRFKey()))
+	r.Use(csrf.Protect(mustGenerateCSRFKey(), csrf.Path("/")))
 
 	r.Handle("/public/*", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
 
@@ -47,7 +47,9 @@ func router() chi.Router {
 		r.Post("/profile/update", controllers.Make(controllers.ProfileUpdate))
 
 		r.Get("/", controllers.Make(controllers.ChatShow))
-		r.Get("/chat/{username}", controllers.Make(controllers.ChatShow))
+		r.Get("/chat/{receiverUsername}", controllers.Make(controllers.ChatShow))
+
+		r.Post("/message/{receiverUsername}", controllers.Make(controllers.MessageStore))
 	})
 
 	// Public routes
