@@ -2,9 +2,16 @@ package controllers
 
 import (
 	"context"
+	"crypto/rand"
+	"encoding/base64"
 	"fmt"
+	"io"
 	"log"
+	"mime"
 	"net/http"
+	"os"
+	"slices"
+	"strings"
 
 	"github.com/a-h/templ"
 	"github.com/danilovict2/go-real-time-chat/internal/database"
@@ -109,4 +116,62 @@ func UserFromJWTMiddleware(next http.Handler) http.Handler {
 		ctx := context.WithValue(r.Context(), userContextKey, user)
 		next.ServeHTTP(w, r.WithContext(ctx))
 	})
+}
+
+func SaveFormFile(r *http.Request, formFile string) (string, ControllerError) {
+	const maxMemory = 1 << 20
+	if err := r.ParseMultipartForm(maxMemory); err != nil {
+		return "", ControllerError{
+			err:  err,
+			code: http.StatusBadRequest,
+		}
+	}
+
+	file, header, err := r.FormFile(formFile)
+	if err != nil {
+		return "", ControllerError{
+			err:  err,
+			code: http.StatusBadRequest,
+		}
+	}
+	defer file.Close()
+
+	allowedMimeTypes := []string{"image/png", "image/jpg"}
+	mimeType, _, err := mime.ParseMediaType(header.Header.Get("Content-Type"))
+	if err != nil || !slices.Contains(allowedMimeTypes, mimeType) {
+		return "", ControllerError{
+			err:  fmt.Errorf("invalid file extension"),
+			code: http.StatusBadRequest,
+		}
+	}
+
+	b := make([]byte, 32)
+	if _, err = rand.Read(b); err != nil {
+		return "", ControllerError{
+			err: err,
+			code: http.StatusInternalServerError,
+		}
+	}
+
+	ext := strings.Split(mimeType, "/")[1]
+	dstName := strings.TrimRight(base64.StdEncoding.EncodeToString(b), "/")
+	dstPath := fmt.Sprintf("%s%s.%s", os.Getenv("IMG_ROOT"), dstName, ext)
+
+	dst, err := os.Create("." + dstPath)
+	if err != nil {
+		return "", ControllerError{
+			err:  err,
+			code: http.StatusInternalServerError,
+		}
+	}
+	defer dst.Close()
+
+	if _, err := io.Copy(dst, file); err != nil {
+		return "", ControllerError{
+			err:  err,
+			code: http.StatusInternalServerError,
+		}
+	}
+
+	return dstPath, ControllerError{}
 }
