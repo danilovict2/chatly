@@ -4,6 +4,7 @@ import (
 	"context"
 	"crypto/rand"
 	"encoding/base64"
+	"errors"
 	"fmt"
 	"io"
 	"log"
@@ -108,7 +109,6 @@ func UserFromJWTMiddleware(next http.Handler) http.Handler {
 
 		user := &models.User{}
 		if err := db.First(user, userID).Error; err != nil {
-			fmt.Println(err)
 			next.ServeHTTP(w, r)
 			return
 		}
@@ -127,8 +127,13 @@ func SaveFormFile(r *http.Request, formFile string) (string, ControllerError) {
 		}
 	}
 
+	fmt.Println(r.MultipartForm)
 	file, header, err := r.FormFile(formFile)
 	if err != nil {
+		if errors.Is(err, http.ErrMissingFile) {
+			return "", ControllerError{}
+		}
+
 		return "", ControllerError{
 			err:  err,
 			code: http.StatusBadRequest,
@@ -148,7 +153,7 @@ func SaveFormFile(r *http.Request, formFile string) (string, ControllerError) {
 	b := make([]byte, 32)
 	if _, err = rand.Read(b); err != nil {
 		return "", ControllerError{
-			err: err,
+			err:  err,
 			code: http.StatusInternalServerError,
 		}
 	}

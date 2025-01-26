@@ -25,11 +25,18 @@ templ ChatContainer(sender, receiver models.User, messages []models.Message) {
 					</div>
 					<div class="chat-header mb-1">
 						<time class="text-xs opacity-50 ml-1">
-							{ message.CreatedAt.Format("2006-01-02") }
+							{ message.CreatedAt.Format("3:4 PM") }
 						</time>
 					</div>
 					<div class="chat-bubble flex flex-col">
-						<p>{ message.Content }</p>
+						if len(message.Image) > 0 {
+							<img
+								src={ message.Image }
+								alt="Attachment"
+								className="sm:max-w-[200px] rounded-md mb-2"
+							/>
+						}
+						<p>{ message.Text }</p>
 					</div>
 				</div>
 			}

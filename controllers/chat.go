@@ -33,7 +33,7 @@ func ChatShow(w http.ResponseWriter, r *http.Request) ControllerError {
 
 		if err := db.Where("sender_id = ? AND receiver_id = ?", sender.ID, receiver.ID).Find(&messages).Error; err != nil {
 			return ControllerError{
-				err: err,
+				err:  err,
 				code: http.StatusInternalServerError,
 			}
 		}
@@ -43,11 +43,9 @@ func ChatShow(w http.ResponseWriter, r *http.Request) ControllerError {
 }
 
 func MessageStore(w http.ResponseWriter, r *http.Request) ControllerError {
-	if err := r.ParseForm(); err != nil {
-		return ControllerError{
-			err:  err,
-			code: http.StatusBadRequest,
-		}
+	messageImage, controllerErr := SaveFormFile(r, "message_image")
+	if controllerErr != (ControllerError{}) {
+		return controllerErr
 	}
 
 	receiverUsername := chi.URLParam(r, "receiverUsername")
@@ -72,7 +70,8 @@ func MessageStore(w http.ResponseWriter, r *http.Request) ControllerError {
 	message := models.Message{
 		SenderID:   sender.ID,
 		ReceiverID: receiver.ID,
-		Content:    r.PostFormValue("message"),
+		Text:       r.PostFormValue("message"),
+		Image:      messageImage,
 	}
 
 	if err := db.Create(&message).Error; err != nil {

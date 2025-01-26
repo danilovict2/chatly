@@ -6,5 +6,6 @@ type Message struct {
 	gorm.Model
 	SenderID   uint
 	ReceiverID uint
-	Content    string `gorm:"type:text"`
+	Text       string `gorm:"type:text"`
+	Image      string
 }

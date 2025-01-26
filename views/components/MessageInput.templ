@@ -3,8 +3,8 @@ package components
 import "github.com/danilovict2/go-real-time-chat/models"
 
 templ MessageInput(receiver models.User) {
-	<div class="p-4 w-full">
-		<form class="flex items-center gap-2" action={ templ.URL("/message/" + receiver.Username) } method="POST">
+	<div id="input-container" class="p-4 w-full">
+		<form class="flex items-center gap-2" action={ templ.URL("/message/" + receiver.Username) } method="POST" enctype="multipart/form-data">
 			@CSRF()
 			<div class="flex-1 flex gap-2">
 				<input
@@ -15,12 +15,15 @@ templ MessageInput(receiver models.User) {
 				/>
 				<input
 					type="file"
-					accept="image/*"
-					class="hidden"
+					id="message-image-input"
+                    name="message_image"
+                    class="hidden"
+					accept="image/png, image/jpg"
 				/>
 				<button
 					type="button"
 					class="hidden sm:flex btn btn-sm btn-circle mt-2"
+					onclick="clickImageInput()"
 				>
 					<i class="fa-solid fa-image text-zinc-400"></i>
 				</button>
@@ -33,4 +36,5 @@ templ MessageInput(receiver models.User) {
 			</button>
 		</form>
 	</div>
+	<script src="/public/js/imagePreview.js"></script>
 }
