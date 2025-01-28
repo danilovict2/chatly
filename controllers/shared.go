@@ -177,5 +177,5 @@ func SaveFormFile(r *http.Request, formFile string) (string, ControllerError) {
 		}
 	}
 
-	return dstPath, ControllerError{}
+	return dstName + "." + ext, ControllerError{}
 }

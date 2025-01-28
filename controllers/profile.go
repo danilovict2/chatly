@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"os"
 
 	"github.com/danilovict2/go-real-time-chat/internal/database"
 	"github.com/danilovict2/go-real-time-chat/models"
@@ -20,6 +21,16 @@ func ProfileUpdate(w http.ResponseWriter, r *http.Request) ControllerError {
 	}
 
 	user, _ := r.Context().Value(userContextKey).(*models.User)
+	if user.Avatar != nil {
+		err := os.Remove("." + os.Getenv("IMG_ROOT") + *user.Avatar)
+		if err != nil {
+			return ControllerError{
+				err:  err,
+				code: http.StatusInternalServerError,
+			}
+		}
+	}
+
 	user.Avatar = &avatarPath
 
 	db, err := database.NewConnection()

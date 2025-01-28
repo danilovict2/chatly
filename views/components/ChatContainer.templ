@@ -31,7 +31,7 @@ templ ChatContainer(sender, receiver models.User, messages []models.Message) {
 					<div class="chat-bubble flex flex-col">
 						if len(message.Image) > 0 {
 							<img
-								src={ message.Image }
+								src={ "/public/img/" + message.Image }
 								alt="Attachment"
 								className="sm:max-w-[200px] rounded-md mb-2"
 							/>
@@ -43,6 +43,5 @@ templ ChatContainer(sender, receiver models.User, messages []models.Message) {
 		</div>
 		@MessageInput(receiver)
 	</div>
-
-    <script src="/public/js/scroll.js"></script>
+	<script src="/public/js/scroll.js"></script>
 }
