@@ -127,7 +127,6 @@ func SaveFormFile(r *http.Request, formFile string) (string, ControllerError) {
 		}
 	}
 
-	fmt.Println(r.MultipartForm)
 	file, header, err := r.FormFile(formFile)
 	if err != nil {
 		if errors.Is(err, http.ErrMissingFile) {
