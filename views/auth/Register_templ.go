@@ -65,7 +65,7 @@ func Register(errorMessage string) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, " <div class=\"min-h-screen grid lg:grid-cols-2\"><div class=\"flex flex-col justify-center items-center p-6 sm:p-12\"><div class=\"w-full max-w-md space-y-8\"><div class=\"text-center mb-8\"><div class=\"flex flex-col items-center gap-2 group\"><div class=\"size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors\"><i class=\"fa-regular fa-message size-6 text-primary\"></i></div><h1 class=\"text-2xl font-bold mt-2\">Create an account</h1><p class=\"text-base-content/60\">Get started for free</p></div></div></div><form method=\"POST\" class=\"space-y-6\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, " <div class=\"min-h-screen grid lg:grid-cols-2\"><div class=\"flex flex-col justify-center items-center p-6 sm:p-12\"><div class=\"w-full max-w-md space-y-8\"><div class=\"text-center mb-8\"><div class=\"flex flex-col items-center gap-2 group\"><div class=\"size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors\"><i class=\"fa-regular fa-message fa-2xl text-primary\"></i></div><h1 class=\"text-2xl font-bold mt-2\">Create an account</h1><p class=\"text-base-content/60\">Get started for free</p></div></div></div><form method=\"POST\" class=\"space-y-6\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -18,7 +18,7 @@ const enableImagePreview = (e) => {
                   flex items-center justify-center"
                   type="button"
                 >
-                  <i class="fa-solid fa-x size-3"></i>
+                  <i class="fa-solid fa-x"></i>
                 </button>
             </div>
         `;

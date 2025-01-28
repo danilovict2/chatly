@@ -31,12 +31,12 @@ func Navbar(user *models.User) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<header class=\"bg-base-100 border-b border-base-300 fixed w-full top-0 z-40 backdrop-blur-lg bg-base-100/80\"><div class=\"container mx-auto px-4 h-16\"><div class=\"flex items-center justify-between h-full\"><a href=\"/\" class=\"flex items-center gap-2.5 hover:opacity-80 transition-all\"><div class=\"size-9 rounded-lg bg-primary-10 flex items-center justify-center\"><i class=\"fa-regular fa-message size-5 text-primary\"></i></div><h1 class=\"text-lg font-bold\">Chat app</h1></a><div class=\"flex items-center gap-2\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<header class=\"bg-base-100 border-b border-base-300 fixed w-full top-0 z-40 backdrop-blur-lg bg-base-100/80\"><div class=\"container mx-auto px-4 h-16\"><div class=\"flex items-center justify-between h-full\"><a href=\"/\" class=\"flex items-center gap-2.5 hover:opacity-80 transition-all\"><div class=\"size-9 rounded-lg bg-primary-10 flex items-center justify-center\"><i class=\"fa-regular fa-message fa-xl text-primary\"></i></div><h1 class=\"text-lg font-bold\">Chat app</h1></a><div class=\"flex items-center gap-2\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
 		if user != nil {
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<a href=\"/profile\" class=\"btn btn-sm gap-2\"><i class=\"fa-solid fa-user size-5\"></i> <span class=\"hidden sm:inline\">Profile</span></a><form action=\"/logout\" method=\"POST\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<a href=\"/profile\" class=\"btn btn-sm gap-2\"><i class=\"fa-solid fa-user fa-xl\"></i> <span class=\"hidden sm:inline\">Profile</span></a><form action=\"/logout\" method=\"POST\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -44,7 +44,7 @@ func Navbar(user *models.User) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<button class=\"flex gap-2 items-center\"><i class=\"fa-solid fa-arrow-right-from-bracket size-5\"></i> <span class=\"hidden sm:inline\">Logout</span></button></form>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<button class=\"flex gap-2 items-center\"><i class=\"fa-solid fa-arrow-right-from-bracket fa-xl\"></i> <span class=\"hidden sm:inline\">Logout</span></button></form>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

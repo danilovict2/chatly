@@ -61,7 +61,7 @@ func Chat(sender, receiver *models.User, messages []models.Message) templ.Compon
 					return templ_7745c5c3_Err
 				}
 			} else {
-				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"w-full flex flex-1 flex-col items-center justify-center p-16 bg-base-100/50\"><div class=\"max-w-md text-center space-y-6\"><div class=\"flex justify-center gap-4 mb-4\"><div class=\"relative\"><div class=\"w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center animate-bounce\"><i class=\"fa-regular fa-message w-8 h-8 text-primary\"></i></div></div></div><h2 class=\"text-2xl font-bold\">Welcome to a Chat App!</h2><p class=\"text-base-content/60\">Select a conversation from the sidebar to start chatting</p></div></div>")
+				templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "<div class=\"w-full flex flex-1 flex-col items-center justify-center p-16 bg-base-100/50\"><div class=\"max-w-md text-center space-y-6\"><div class=\"flex justify-center gap-4 mb-4\"><div class=\"relative\"><div class=\"w-16 h-16 rounded-2xl bg-primary/10 flex items-center justify-center animate-bounce\"><i class=\"fa-regular fa-message fa-2xl text-primary\"></i></div></div></div><h2 class=\"text-2xl font-bold\">Welcome to a Chat App!</h2><p class=\"text-base-content/60\">Select a conversation from the sidebar to start chatting</p></div></div>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

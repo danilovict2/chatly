@@ -65,7 +65,7 @@ func Sidebar(sender models.User, receiver *models.User) templ.Component {
 		}
 		ctx = templ.ClearChildren(ctx)
 		users := FindUsers(sender)
-		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<aside class=\"h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200\"><div class=\"border-b border-base-300 w-full p-5\"><div class=\"flex items-center gap-2\"><i class=\"fa-solid fa-users size-6\"></i> <span class=\"font-medium hidden lg:block\">Contacts</span></div></div><div class=\"overflow-y-auto w-full py-3\">")
+		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<aside class=\"h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200\"><div class=\"border-b border-base-300 w-full p-5\"><div class=\"flex items-center gap-2\"><i class=\"fa-solid fa-users fa-xl\"></i> <span class=\"font-medium hidden lg:block\">Contacts</span></div></div><div class=\"overflow-y-auto w-full py-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
