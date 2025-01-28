@@ -5,7 +5,7 @@ import "github.com/danilovict2/go-real-time-chat/models"
 templ ChatContainer(sender, receiver models.User, messages []models.Message) {
 	<div class="flex-1 flex flex-col overflow-auto">
 		@ChatHeader(receiver)
-		<div class="flex-1 overflow-y-auto p-4 space-y-4">
+		<div id="chat" class="flex-1 overflow-y-auto p-4 space-y-4">
 			for _, message := range messages {
 				<div class={ "chat", templ.KV("chat-end", message.SenderID != receiver.ID), templ.KV("chat-start", message.SenderID == receiver.ID) }>
 					<div class="chat-image avatar">
@@ -25,7 +25,7 @@ templ ChatContainer(sender, receiver models.User, messages []models.Message) {
 					</div>
 					<div class="chat-header mb-1">
 						<time class="text-xs opacity-50 ml-1">
-							{ message.CreatedAt.Format("3:4 PM") }
+							{ message.CreatedAt.Format("3:04 PM") }
 						</time>
 					</div>
 					<div class="chat-bubble flex flex-col">
@@ -43,4 +43,6 @@ templ ChatContainer(sender, receiver models.User, messages []models.Message) {
 		</div>
 		@MessageInput(receiver)
 	</div>
+
+    <script src="/public/js/scroll.js"></script>
 }
