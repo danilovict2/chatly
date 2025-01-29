@@ -1,7 +1,6 @@
 const scrollToBottom = () => {
-    console.log('here')
-    const container = document.getElementById('chat');
+    const container = document.getElementById('chat-container');
     container.scrollTop = container.scrollHeight;
 };
 
-document.getElementById("chat").addEventListener("load", scrollToBottom())
+document.getElementById('chat-container').addEventListener('load', scrollToBottom())

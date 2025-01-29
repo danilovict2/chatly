@@ -158,7 +158,7 @@ func SaveFormFile(r *http.Request, formFile string) (string, ControllerError) {
 	}
 
 	ext := strings.Split(mimeType, "/")[1]
-	dstName := strings.TrimRight(base64.StdEncoding.EncodeToString(b), "/")
+	dstName := strings.ReplaceAll(base64.StdEncoding.EncodeToString(b), "/", "")
 	dstPath := fmt.Sprintf("%s%s.%s", os.Getenv("IMG_ROOT"), dstName, ext)
 
 	dst, err := os.Create("." + dstPath)

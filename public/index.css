@@ -1802,11 +1802,6 @@ html {
   height: 1.25rem;
 }
 
-.size-6 {
-  width: 1.5rem;
-  height: 1.5rem;
-}
-
 .size-9 {
   width: 2.25rem;
   height: 2.25rem;
@@ -1822,10 +1817,6 @@ html {
 
 .h-4 {
   height: 1rem;
-}
-
-.h-8 {
-  height: 2rem;
 }
 
 .h-\[calc\(100vh-8rem\)\] {
@@ -1862,10 +1853,6 @@ html {
 
 .w-4\/6 {
   width: 66.666667%;
-}
-
-.w-8 {
-  width: 2rem;
 }
 
 .w-full {
