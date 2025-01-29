@@ -93,7 +93,7 @@ func MessageStore(w http.ResponseWriter, r *http.Request) ControllerError {
 	}
 
 	pusherClient := pusher.NewClient()
-	pusherClient.Trigger("messages", "to-"+receiverUsername, data)
+	pusherClient.Trigger("message", "to."+receiverUsername, data)
 
 	http.Redirect(w, r, "/chat/"+receiver.Username, http.StatusSeeOther)
 	return ControllerError{}
