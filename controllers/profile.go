@@ -7,20 +7,33 @@ import (
 	"github.com/danilovict2/go-real-time-chat/internal/database"
 	"github.com/danilovict2/go-real-time-chat/models"
 	"github.com/danilovict2/go-real-time-chat/views/profile"
+	"github.com/go-chi/chi/v5"
 )
 
 func ProfileShow(w http.ResponseWriter, r *http.Request) ControllerError {
 	user, _ := r.Context().Value(userContextKey).(*models.User)
+	username := chi.URLParam(r, "username")
+	if user.Username != username {
+		w.WriteHeader(http.StatusUnauthorized)
+		return ControllerError{}
+	}
+
 	return Render(w, r, profile.Profile(*user))
 }
 
 func ProfileUpdate(w http.ResponseWriter, r *http.Request) ControllerError {
+	user, _ := r.Context().Value(userContextKey).(*models.User)
+	username := chi.URLParam(r, "username")
+	if user.Username != username {
+		w.WriteHeader(http.StatusUnauthorized)
+		return ControllerError{}
+	}
+
 	avatarPath, controllerErr := SaveFormFile(r, "avatar")
 	if controllerErr != (ControllerError{}) {
 		return controllerErr
 	}
 
-	user, _ := r.Context().Value(userContextKey).(*models.User)
 	if user.Avatar != nil {
 		err := os.Remove("." + os.Getenv("IMG_ROOT") + *user.Avatar)
 		if err != nil {
@@ -48,6 +61,6 @@ func ProfileUpdate(w http.ResponseWriter, r *http.Request) ControllerError {
 		}
 	}
 
-	http.Redirect(w, r, "/profile", http.StatusSeeOther)
+	http.Redirect(w, r, "/profile/" + username, http.StatusSeeOther)
 	return ControllerError{}
 }

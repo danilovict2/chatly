@@ -27,7 +27,7 @@ templ Profile(user models.User) {
 								class="absolute bottom-0 right-0 bg-base-content hover:scale-105 p-2 rounded-full cursor-pointer transition-all duration-200"
 							>
 								<i class="fa-solid fa-camera size-5 text-base-200 text-center"></i>
-								<form method="POST" action="/profile/update" enctype="multipart/form-data">
+								<form method="POST" action={ templ.URL("/profile/" + user.Username) } enctype="multipart/form-data">
 									@components.CSRF()
 									<input
 										type="file"

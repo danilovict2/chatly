@@ -60,7 +60,16 @@ func Profile(user models.User) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" alt=\"Profile\" class=\"size-32 rounded-full object-cover border-4\"> <label for=\"avatar-upload\" class=\"absolute bottom-0 right-0 bg-base-content hover:scale-105 p-2 rounded-full cursor-pointer transition-all duration-200\"><i class=\"fa-solid fa-camera size-5 text-base-200 text-center\"></i><form method=\"POST\" action=\"/profile/update\" enctype=\"multipart/form-data\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 2, "\" alt=\"Profile\" class=\"size-32 rounded-full object-cover border-4\"> <label for=\"avatar-upload\" class=\"absolute bottom-0 right-0 bg-base-content hover:scale-105 p-2 rounded-full cursor-pointer transition-all duration-200\"><i class=\"fa-solid fa-camera size-5 text-base-200 text-center\"></i><form method=\"POST\" action=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 templ.SafeURL = templ.URL("/profile/" + user.Username)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(string(templ_7745c5c3_Var4)))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "\" enctype=\"multipart/form-data\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -68,46 +77,46 @@ func Profile(user models.User) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 3, "<input type=\"file\" id=\"avatar-upload\" name=\"avatar\" class=\"hidden\" accept=\"image/png, image/jpg\" onchange=\"this.form.submit()\"></form></label></div><p class=\"text-sm text-zinc-400\">Click the camera icon to update your photo</p></div><div class=\"space-y-6\"><div class=\"space-y-1.5\"><div class=\"text-sm text-zinc-400 flex items-center gap-2\"><i class=\"fa-solid fa-user size-4\"></i> Username</div><p class=\"px-4 py-2.5 bg-base-200 rounded-lg border\">")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			var templ_7745c5c3_Var4 string
-			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(user.Username)
-			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/profile/Profile.templ`, Line: 53, Col: 75}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "</p></div><div class=\"space-y-1.5\"><div class=\"text-sm text-zinc-400 flex items-center gap-2\"><i class=\"fa-regular fa-envelope size-4\"></i> Email Address</div><p class=\"px-4 py-2.5 bg-base-200 rounded-lg border\">")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 4, "<input type=\"file\" id=\"avatar-upload\" name=\"avatar\" class=\"hidden\" accept=\"image/png, image/jpg\" onchange=\"this.form.submit()\"></form></label></div><p class=\"text-sm text-zinc-400\">Click the camera icon to update your photo</p></div><div class=\"space-y-6\"><div class=\"space-y-1.5\"><div class=\"text-sm text-zinc-400 flex items-center gap-2\"><i class=\"fa-solid fa-user size-4\"></i> Username</div><p class=\"px-4 py-2.5 bg-base-200 rounded-lg border\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var5 string
-			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(user.Email)
+			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(user.Username)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/profile/Profile.templ`, Line: 60, Col: 72}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/profile/Profile.templ`, Line: 53, Col: 75}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</p></div></div><div class=\"mt-6 bg-base-300 rounded-xl p-6\"><h2 class=\"text-lg font-medium  mb-4\">Account Information</h2><div class=\"space-y-3 text-sm\"><div class=\"flex items-center justify-between py-2 border-b border-zinc-700\"><span>Member Since</span> <span>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 5, "</p></div><div class=\"space-y-1.5\"><div class=\"text-sm text-zinc-400 flex items-center gap-2\"><i class=\"fa-regular fa-envelope size-4\"></i> Email Address</div><p class=\"px-4 py-2.5 bg-base-200 rounded-lg border\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var6 string
-			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(user.CreatedAt.Format("2006-01-02"))
+			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(user.Email)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/profile/Profile.templ`, Line: 68, Col: 51}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/profile/Profile.templ`, Line: 60, Col: 72}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</span></div><div class=\"flex items-center justify-between py-2\"><span>Account Status</span> <span class=\"text-green-500\">Active</span></div></div></div></div></div></div>")
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 6, "</p></div></div><div class=\"mt-6 bg-base-300 rounded-xl p-6\"><h2 class=\"text-lg font-medium  mb-4\">Account Information</h2><div class=\"space-y-3 text-sm\"><div class=\"flex items-center justify-between py-2 border-b border-zinc-700\"><span>Member Since</span> <span>")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var7 string
+			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(user.CreatedAt.Format("2006-01-02"))
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/profile/Profile.templ`, Line: 68, Col: 51}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 7, "</span></div><div class=\"flex items-center justify-between py-2\"><span>Account Status</span> <span class=\"text-green-500\">Active</span></div></div></div></div></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

@@ -43,8 +43,8 @@ func router() chi.Router {
 		r.Use(jwtauth.Verifier(tokenAuth))
 		r.Use(controllers.Authenticator("/login"))
 
-		r.Get("/profile", controllers.Make(controllers.ProfileShow))
-		r.Post("/profile/update", controllers.Make(controllers.ProfileUpdate))
+		r.Get("/profile/{username}", controllers.Make(controllers.ProfileShow))
+		r.Post("/profile/{username}", controllers.Make(controllers.ProfileUpdate))
 
 		r.Get("/", controllers.Make(controllers.ChatShow))
 		r.Get("/chat/{receiverUsername}", controllers.Make(controllers.ChatShow))
