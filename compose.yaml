@@ -1,0 +1,33 @@
+services:
+  server:
+    build:
+      context: .
+      target: final
+    ports:
+      - 8000:8000
+    volumes:
+      - images:/public/img
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres
+    restart: always
+    user: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=real-time-chat
+      - POSTGRES_PASSWORD=postgres
+    expose:
+      - 5432
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db-data:
+  images:
+

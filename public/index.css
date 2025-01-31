@@ -1787,6 +1787,11 @@ html {
   height: 3rem;
 }
 
+.size-3 {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
 .size-32 {
   width: 8rem;
   height: 8rem;
@@ -1805,11 +1810,6 @@ html {
 .size-9 {
   width: 2.25rem;
   height: 2.25rem;
-}
-
-.size-3 {
-  width: 0.75rem;
-  height: 0.75rem;
 }
 
 .h-12 {
@@ -2082,13 +2082,13 @@ html {
   background-color: var(--fallback-bc,oklch(var(--bc)/var(--tw-bg-opacity, 1)));
 }
 
-.bg-primary\/10 {
-  background-color: var(--fallback-p,oklch(var(--p)/0.1));
-}
-
 .bg-green-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(34 197 94 / var(--tw-bg-opacity, 1));
+}
+
+.bg-primary\/10 {
+  background-color: var(--fallback-p,oklch(var(--p)/0.1));
 }
 
 .object-cover {
