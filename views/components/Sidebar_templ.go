@@ -18,7 +18,7 @@ func Avatar(user models.User) string {
 		return "/public/img/" + *user.Avatar
 	}
 
-	return "/public/img/avatar.png"
+	return "/public/avatar.png"
 }
 
 func FindUsers(sender models.User) []models.User {
