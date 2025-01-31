@@ -1,4 +1,9 @@
 const scrollToBottom = () => {
     const container = document.getElementById('chat-container');
-    container.scrollTop = container.scrollHeight;
+    if (container) {
+        // Wait for images to load
+        setTimeout(() => {
+            container.scrollTop = container.scrollHeight;
+        }, 450);
+    }
 };
