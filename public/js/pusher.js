@@ -7,8 +7,8 @@ const pusher = new Pusher('398ed8ab4241f6a50dec', {
 });
 
 const setSelectedUserStatus = () => {
-    const statusComponent = document.getElementById('user-status');
-    if (statusComponent) {
+    const statusComponents = document.getElementsByClassName('user-status');
+    for (const statusComponent of statusComponents) {
         const userID = JSON.parse(statusComponent.getAttribute('user-id'));
         const isUserOnline = isOnline(userID);
         statusComponent.innerText = isUserOnline ? "Online" : "Offline";

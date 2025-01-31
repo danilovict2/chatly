@@ -61,7 +61,7 @@ templ Sidebar(sender models.User, receiver *models.User) {
 						</div>
 						<div class="hidden lg:block text-left min-w-0">
 							<div class="font-medium truncate">{ user.Username }</div>
-							<div class="text-sm text-zinc-400" id="user-status" user-id={ templ.JSONString(user.ID) }>
+							<div class="text-sm text-zinc-400 user-status" user-id={ templ.JSONString(user.ID) }>
 								Offline
 							</div>
 						</div>

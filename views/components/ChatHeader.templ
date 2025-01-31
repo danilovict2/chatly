@@ -13,7 +13,7 @@ templ ChatHeader(receiver models.User) {
 				</div>
 				<div>
 					<h3 class="font-medium">{ receiver.Username }</h3>
-					<p class="text-sm text-base-content/70" id="user-status" user-id={ templ.JSONString(receiver.ID) }>
+					<p class="text-sm text-base-content/70 user-status" user-id={ templ.JSONString(receiver.ID) }>
 						Offline
 					</p>
 				</div>
