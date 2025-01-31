@@ -57,10 +57,11 @@ templ Sidebar(sender models.User, receiver *models.User) {
 								alt={ user.Username }
 								class="size-12 object-cover rounded-full"
 							/>
+							<span class="absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900 hidden" id="online-circle"></span>
 						</div>
 						<div class="hidden lg:block text-left min-w-0">
 							<div class="font-medium truncate">{ user.Username }</div>
-							<div class="text-sm text-zinc-400">
+							<div class="text-sm text-zinc-400" id="user-status" user-id={ templ.JSONString(user.ID) }>
 								Offline
 							</div>
 						</div>

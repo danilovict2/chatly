@@ -14,8 +14,12 @@ templ Base(user *models.User) {
 			<meta charset="UTF-8"/>
 			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 			<link href="/public/index.css" rel="stylesheet"/>
+			<!-- Make CSRF Token available to Javascript -->
+			@templ.JSONScript("CSRF", ctx.Value("gorilla.csrf.Token").(string))
 			<script src="https://kit.fontawesome.com/27c79d6f66.js" crossorigin="anonymous"></script>
 			<script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+			<script src="/public/js/scroll.js"></script>
+			<script src="/public/js/pusher.js"></script>
 		</head>
 		<body>
 			@components.Navbar(user)

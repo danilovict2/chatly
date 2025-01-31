@@ -50,6 +50,8 @@ func router() chi.Router {
 		r.Get("/chat/{receiverUsername}", controllers.Make(controllers.ChatShow))
 
 		r.Post("/message/{receiverUsername}", controllers.Make(controllers.MessageStore))
+
+		r.Post("/pusher/auth", controllers.Make(controllers.PusherAuth))
 	})
 
 	// Public routes

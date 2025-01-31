@@ -13,7 +13,6 @@ templ Chat(sender, receiver *models.User, messages []models.Message) {
 				<div class="bg-base-100 rounded-lg shadow-cl w-full max-w-6xl h-[calc(100vh-8rem)]">
 					<div class="flex h-full rounded-lg overflow-hidden">
 						@components.Sidebar(*sender, receiver)
-
 						if receiver != nil {
 							@components.ChatContainer(*sender, *receiver, messages)
 						} else {
