@@ -9,7 +9,6 @@ import "github.com/a-h/templ"
 import templruntime "github.com/a-h/templ/runtime"
 
 import (
-	"github.com/danilovict2/go-real-time-chat/internal/database"
 	"github.com/danilovict2/go-real-time-chat/models"
 )
 
@@ -21,20 +20,6 @@ func Avatar(user models.User) string {
 	return "/public/avatar.png"
 }
 
-func FindUsers(sender models.User) []models.User {
-	db, err := database.NewConnection()
-	if err != nil {
-		return []models.User{}
-	}
-
-	users := make([]models.User, 0)
-	if err := db.Where("id <> ?", sender.ID).Find(&users).Error; err != nil {
-		return []models.User{}
-	}
-
-	return users
-}
-
 func IsSelectedReceiver(user models.User, receiver *models.User) bool {
 	if receiver != nil {
 		return user.ID == receiver.ID
@@ -43,7 +28,7 @@ func IsSelectedReceiver(user models.User, receiver *models.User) bool {
 	return false
 }
 
-func Sidebar(sender models.User, receiver *models.User) templ.Component {
+func Sidebar(sender models.User, receiver *models.User, users []models.User) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -64,7 +49,6 @@ func Sidebar(sender models.User, receiver *models.User) templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		users := FindUsers(sender)
 		templ_7745c5c3_Err = templruntime.WriteString(templ_7745c5c3_Buffer, 1, "<aside class=\"h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200\"><div class=\"border-b border-base-300 w-full p-5\"><div class=\"flex items-center gap-2\"><i class=\"fa-solid fa-users fa-xl\"></i> <span class=\"font-medium hidden lg:block\">Contacts</span></div></div><div class=\"overflow-y-auto w-full py-3\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -109,7 +93,7 @@ func Sidebar(sender models.User, receiver *models.User) templ.Component {
 			var templ_7745c5c3_Var5 string
 			templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs(Avatar(user))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/Sidebar.templ`, Line: 56, Col: 26}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/Sidebar.templ`, Line: 40, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
@@ -122,7 +106,7 @@ func Sidebar(sender models.User, receiver *models.User) templ.Component {
 			var templ_7745c5c3_Var6 string
 			templ_7745c5c3_Var6, templ_7745c5c3_Err = templ.JoinStringErrs(user.Username)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/Sidebar.templ`, Line: 57, Col: 27}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/Sidebar.templ`, Line: 41, Col: 27}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 			if templ_7745c5c3_Err != nil {
@@ -135,7 +119,7 @@ func Sidebar(sender models.User, receiver *models.User) templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(user.Username)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/Sidebar.templ`, Line: 63, Col: 56}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/Sidebar.templ`, Line: 47, Col: 56}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {
@@ -148,7 +132,7 @@ func Sidebar(sender models.User, receiver *models.User) templ.Component {
 			var templ_7745c5c3_Var8 string
 			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(templ.JSONString(user.ID))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/Sidebar.templ`, Line: 64, Col: 89}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/components/Sidebar.templ`, Line: 48, Col: 89}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {

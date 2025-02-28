@@ -1,7 +1,6 @@
 package components
 
 import (
-	"github.com/danilovict2/go-real-time-chat/internal/database"
 	"github.com/danilovict2/go-real-time-chat/models"
 )
 
@@ -13,20 +12,6 @@ func Avatar(user models.User) string {
 	return "/public/avatar.png"
 }
 
-func FindUsers(sender models.User) []models.User {
-	db, err := database.NewConnection()
-	if err != nil {
-		return []models.User{}
-	}
-
-	users := make([]models.User, 0)
-	if err := db.Where("id <> ?", sender.ID).Find(&users).Error; err != nil {
-		return []models.User{}
-	}
-
-	return users
-}
-
 func IsSelectedReceiver(user models.User, receiver *models.User) bool {
 	if receiver != nil {
 		return user.ID == receiver.ID
@@ -35,8 +20,7 @@ func IsSelectedReceiver(user models.User, receiver *models.User) bool {
 	return false
 }
 
-templ Sidebar(sender models.User, receiver *models.User) {
-	{{ users := FindUsers(sender) }}
+templ Sidebar(sender models.User, receiver *models.User, users []models.User) {
 	<aside class="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
 		<div class="border-b border-base-300 w-full p-5">
 			<div class="flex items-center gap-2">

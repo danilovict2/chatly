@@ -10,7 +10,7 @@ import (
 	"github.com/pusher/pusher-http-go/v5"
 )
 
-func PusherAuth(w http.ResponseWriter, r *http.Request) ControllerError {
+func (cfg *Config) PusherAuth(w http.ResponseWriter, r *http.Request) ControllerError {
 	params, err := io.ReadAll(r.Body)
 	if err != nil {
 		return ControllerError{
@@ -28,13 +28,13 @@ func PusherAuth(w http.ResponseWriter, r *http.Request) ControllerError {
 	response, err := pusherClient.AuthorizePresenceChannel(params, member)
 	if err != nil {
 		return ControllerError{
-			err: err,
+			err:  err,
 			code: http.StatusUnauthorized,
 		}
 	}
 
 	w.WriteHeader(http.StatusOK)
 	w.Write(response)
-	
+
 	return ControllerError{}
 }

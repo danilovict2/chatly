@@ -2,6 +2,7 @@ package main
 
 import (
 	"crypto/rand"
+	"github.com/danilovict2/go-real-time-chat/internal/database"
 	"log"
 	"net/http"
 	"os"
@@ -17,21 +18,32 @@ import (
 
 type Server struct {
 	router chi.Router
+	config *controllers.Config
 }
 
 func NewServer() Server {
+	db, err := database.NewConnection()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	config := &controllers.Config{
+		DB: db,
+	}
+
 	return Server{
-		router: router(),
+		router: router(config),
+		config: config,
 	}
 }
 
-func router() chi.Router {
+func router(config *controllers.Config) chi.Router {
 	r := chi.NewRouter()
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
-	r.Use(controllers.UserFromJWTMiddleware)
+	r.Use(config.UserFromJWTMiddleware)
 	r.Use(csrf.Protect(mustGenerateCSRFKey(), csrf.Path("/")))
 
 	r.Handle("/public/*", http.StripPrefix("/public/", http.FileServer(http.Dir("public"))))
@@ -43,28 +55,28 @@ func router() chi.Router {
 		r.Use(jwtauth.Verifier(tokenAuth))
 		r.Use(controllers.Authenticator("/login"))
 
-		r.Get("/profile/{username}", controllers.Make(controllers.ProfileShow))
-		r.Post("/profile/{username}", controllers.Make(controllers.ProfileUpdate))
+		r.Get("/profile/{username}", controllers.Make(config.ProfileShow))
+		r.Post("/profile/{username}", controllers.Make(config.ProfileUpdate))
 
-		r.Get("/", controllers.Make(controllers.ChatShow))
-		r.Get("/chat/{receiverUsername}", controllers.Make(controllers.ChatShow))
+		r.Get("/", controllers.Make(config.ChatShow))
+		r.Get("/chat/{receiverUsername}", controllers.Make(config.ChatShow))
 
-		r.Post("/message/{receiverUsername}", controllers.Make(controllers.MessageStore))
+		r.Post("/message/{receiverUsername}", controllers.Make(config.MessageStore))
 
-		r.Post("/pusher/auth", controllers.Make(controllers.PusherAuth))
+		r.Post("/pusher/auth", controllers.Make(config.PusherAuth))
 	})
 
 	// Public routes
 	r.Group(func(r chi.Router) {
 		// Auth routes
 		r.Group(func(r chi.Router) {
-			r.Get("/register", controllers.Make(controllers.RegisterForm))
-			r.Post("/register", controllers.Make(controllers.Register))
+			r.Get("/register", controllers.Make(config.RegisterForm))
+			r.Post("/register", controllers.Make(config.Register))
 
-			r.Get("/login", controllers.Make(controllers.LoginForm))
-			r.Post("/login", controllers.Make(controllers.Login))
+			r.Get("/login", controllers.Make(config.LoginForm))
+			r.Post("/login", controllers.Make(config.Login))
 
-			r.Post("/logout", controllers.Make(controllers.Logout))
+			r.Post("/logout", controllers.Make(config.Logout))
 		})
 	})
 

@@ -6,13 +6,13 @@ import (
 	"github.com/danilovict2/go-real-time-chat/views/layout"
 )
 
-templ Chat(sender, receiver *models.User, messages []models.Message) {
+templ Chat(sender, receiver *models.User, messages []models.Message, users []models.User) {
 	@layout.Base(sender) {
 		<div class="h-screen bg-base-200">
 			<div class="flex items-center justify-center pt-20 px-4">
 				<div class="bg-base-100 rounded-lg shadow-cl w-full max-w-6xl h-[calc(100vh-8rem)]">
 					<div class="flex h-full rounded-lg overflow-hidden">
-						@components.Sidebar(*sender, receiver)
+						@components.Sidebar(*sender, receiver, users)
 						if receiver != nil {
 							@components.ChatContainer(*sender, *receiver, messages)
 						} else {

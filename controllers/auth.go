@@ -4,7 +4,6 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/danilovict2/go-real-time-chat/internal/database"
 	"github.com/danilovict2/go-real-time-chat/internal/jwt"
 	"github.com/danilovict2/go-real-time-chat/models"
 	"github.com/danilovict2/go-real-time-chat/views/auth"
@@ -14,7 +13,7 @@ import (
 
 const DefaultJWTExpiration time.Duration = time.Hour * 24 * 7
 
-func RegisterForm(w http.ResponseWriter, r *http.Request) ControllerError {
+func (cfg *Config) RegisterForm(w http.ResponseWriter, r *http.Request) ControllerError {
 	token := jwtauth.TokenFromCookie(r)
 	// Prevent authenticated users from accesing register
 	if token != "" {
@@ -26,19 +25,11 @@ func RegisterForm(w http.ResponseWriter, r *http.Request) ControllerError {
 	return Render(w, r, auth.Register(errorMessage))
 }
 
-func Register(w http.ResponseWriter, r *http.Request) ControllerError {
+func (cfg *Config) Register(w http.ResponseWriter, r *http.Request) ControllerError {
 	if err := r.ParseForm(); err != nil {
 		return ControllerError{
 			err:  err,
 			code: http.StatusBadRequest,
-		}
-	}
-
-	db, err := database.NewConnection()
-	if err != nil {
-		return ControllerError{
-			err:  err,
-			code: http.StatusInternalServerError,
 		}
 	}
 
@@ -48,11 +39,12 @@ func Register(w http.ResponseWriter, r *http.Request) ControllerError {
 		Password: []byte(r.PostFormValue("password")),
 	}
 
-	if valid, reason := user.IsValid(db); !valid {
+	if valid, reason := user.IsValid(cfg.DB); !valid {
 		http.Redirect(w, r, "/register?error_message="+reason, http.StatusFound)
 		return ControllerError{}
 	}
 
+	var err error
 	user.Password, err = bcrypt.GenerateFromPassword(user.Password, bcrypt.DefaultCost)
 	if err != nil {
 		return ControllerError{
@@ -61,7 +53,7 @@ func Register(w http.ResponseWriter, r *http.Request) ControllerError {
 		}
 	}
 
-	db.Create(&user)
+	cfg.DB.Create(&user)
 	if err = setJWTCookie(user.ID, time.Now().Add(DefaultJWTExpiration), w); err != nil {
 		return ControllerError{
 			err:  err,
@@ -73,7 +65,7 @@ func Register(w http.ResponseWriter, r *http.Request) ControllerError {
 	return ControllerError{}
 }
 
-func LoginForm(w http.ResponseWriter, r *http.Request) ControllerError {
+func (cfg *Config) LoginForm(w http.ResponseWriter, r *http.Request) ControllerError {
 	token := jwtauth.TokenFromCookie(r)
 	// Prevent authenticated users from accesing login
 	if token != "" {
@@ -84,7 +76,7 @@ func LoginForm(w http.ResponseWriter, r *http.Request) ControllerError {
 	return Render(w, r, auth.Login())
 }
 
-func Login(w http.ResponseWriter, r *http.Request) ControllerError {
+func (cfg *Config) Login(w http.ResponseWriter, r *http.Request) ControllerError {
 	if err := r.ParseForm(); err != nil {
 		return ControllerError{
 			err:  err,
@@ -92,16 +84,8 @@ func Login(w http.ResponseWriter, r *http.Request) ControllerError {
 		}
 	}
 
-	db, err := database.NewConnection()
-	if err != nil {
-		return ControllerError{
-			err:  err,
-			code: http.StatusInternalServerError,
-		}
-	}
-
 	user := models.User{}
-	if err := db.Where("email = ?", r.PostFormValue("email")).First(&user).Error; err != nil {
+	if err := cfg.DB.Where("email = ?", r.PostFormValue("email")).First(&user).Error; err != nil {
 		return ControllerError{
 			err:  err,
 			code: http.StatusInternalServerError,
@@ -115,7 +99,7 @@ func Login(w http.ResponseWriter, r *http.Request) ControllerError {
 		}
 	}
 
-	if err = setJWTCookie(user.ID, time.Now().Add(DefaultJWTExpiration), w); err != nil {
+	if err := setJWTCookie(user.ID, time.Now().Add(DefaultJWTExpiration), w); err != nil {
 		return ControllerError{
 			err:  err,
 			code: http.StatusBadRequest,
@@ -145,7 +129,7 @@ func setJWTCookie(userID uint, expires time.Time, w http.ResponseWriter) error {
 	return nil
 }
 
-func Logout(w http.ResponseWriter, r *http.Request) ControllerError {
+func (cfg *Config) Logout(w http.ResponseWriter, r *http.Request) ControllerError {
 	setJWTCookie(0, time.Now(), w)
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 

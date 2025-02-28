@@ -4,13 +4,12 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/danilovict2/go-real-time-chat/internal/database"
 	"github.com/danilovict2/go-real-time-chat/models"
 	"github.com/danilovict2/go-real-time-chat/views/profile"
 	"github.com/go-chi/chi/v5"
 )
 
-func ProfileShow(w http.ResponseWriter, r *http.Request) ControllerError {
+func (cfg *Config) ProfileShow(w http.ResponseWriter, r *http.Request) ControllerError {
 	user, _ := r.Context().Value(userContextKey).(*models.User)
 	username := chi.URLParam(r, "username")
 	if user.Username != username {
@@ -21,7 +20,7 @@ func ProfileShow(w http.ResponseWriter, r *http.Request) ControllerError {
 	return Render(w, r, profile.Profile(*user))
 }
 
-func ProfileUpdate(w http.ResponseWriter, r *http.Request) ControllerError {
+func (cfg *Config) ProfileUpdate(w http.ResponseWriter, r *http.Request) ControllerError {
 	user, _ := r.Context().Value(userContextKey).(*models.User)
 	username := chi.URLParam(r, "username")
 	if user.Username != username {
@@ -46,21 +45,13 @@ func ProfileUpdate(w http.ResponseWriter, r *http.Request) ControllerError {
 
 	user.Avatar = &avatarPath
 
-	db, err := database.NewConnection()
-	if err != nil {
+	if err := cfg.DB.Save(user).Error; err != nil {
 		return ControllerError{
 			err:  err,
 			code: http.StatusInternalServerError,
 		}
 	}
 
-	if err := db.Save(user).Error; err != nil {
-		return ControllerError{
-			err:  err,
-			code: http.StatusInternalServerError,
-		}
-	}
-
-	http.Redirect(w, r, "/profile/" + username, http.StatusSeeOther)
+	http.Redirect(w, r, "/profile/"+username, http.StatusSeeOther)
 	return ControllerError{}
 }

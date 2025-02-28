@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"gorm.io/gorm"
 	"io"
 	"log"
 	"mime"
@@ -15,7 +16,6 @@ import (
 	"strings"
 
 	"github.com/a-h/templ"
-	"github.com/danilovict2/go-real-time-chat/internal/database"
 	"github.com/danilovict2/go-real-time-chat/internal/jwt"
 	"github.com/danilovict2/go-real-time-chat/models"
 	"github.com/go-chi/jwtauth/v5"
@@ -24,6 +24,10 @@ import (
 type ControllerError struct {
 	err  error
 	code int
+}
+
+type Config struct {
+	DB *gorm.DB
 }
 
 type HTTPController func(w http.ResponseWriter, r *http.Request) ControllerError
@@ -85,7 +89,7 @@ type contextKey string
 
 const userContextKey contextKey = "user"
 
-func UserFromJWTMiddleware(next http.Handler) http.Handler {
+func (cfg *Config) UserFromJWTMiddleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		tokenString := jwtauth.TokenFromCookie(r)
 		ja := jwt.NewAuth()
@@ -101,14 +105,8 @@ func UserFromJWTMiddleware(next http.Handler) http.Handler {
 			return
 		}
 
-		db, err := database.NewConnection()
-		if err != nil {
-			next.ServeHTTP(w, r)
-			return
-		}
-
 		user := &models.User{}
-		if err := db.First(user, userID).Error; err != nil {
+		if err := cfg.DB.First(user, userID).Error; err != nil {
 			next.ServeHTTP(w, r)
 			return
 		}

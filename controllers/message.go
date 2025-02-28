@@ -3,30 +3,21 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/danilovict2/go-real-time-chat/internal/database"
 	"github.com/danilovict2/go-real-time-chat/internal/pusher"
 	"github.com/danilovict2/go-real-time-chat/models"
 	"github.com/danilovict2/go-real-time-chat/views/components"
 	"github.com/go-chi/chi/v5"
 )
 
-func MessageStore(w http.ResponseWriter, r *http.Request) ControllerError {
+func (cfg *Config) MessageStore(w http.ResponseWriter, r *http.Request) ControllerError {
 	messageImage, controllerErr := SaveFormFile(r, "message_image")
 	if controllerErr != (ControllerError{}) {
 		return controllerErr
 	}
 
 	receiverUsername := chi.URLParam(r, "receiverUsername")
-	db, err := database.NewConnection()
-	if err != nil {
-		return ControllerError{
-			err:  err,
-			code: http.StatusInternalServerError,
-		}
-	}
-
 	receiver := &models.User{}
-	if err := db.Where("username = ?", receiverUsername).First(receiver).Error; err != nil {
+	if err := cfg.DB.Where("username = ?", receiverUsername).First(receiver).Error; err != nil {
 		return ControllerError{
 			err:  err,
 			code: http.StatusInternalServerError,
@@ -42,7 +33,7 @@ func MessageStore(w http.ResponseWriter, r *http.Request) ControllerError {
 		Image:      messageImage,
 	}
 
-	if err := db.Create(&message).Error; err != nil {
+	if err := cfg.DB.Create(&message).Error; err != nil {
 		return ControllerError{
 			err:  err,
 			code: http.StatusInternalServerError,
