@@ -24,20 +24,7 @@ RUN --mount=type=cache,target=/var/cache/apk \
         && \
         update-ca-certificates
 
-ARG UID=10001
-RUN adduser \
-    --disabled-password \
-    --gecos "" \
-    --home "/nonexistent" \
-    --shell "/sbin/nologin" \
-    --no-create-home \
-    --uid "${UID}" \
-    appuser
-
 COPY public public
-RUN  chown -R appuser:appuser public
-
-USER appuser
 
 COPY --from=build /bin/server /bin/
 
