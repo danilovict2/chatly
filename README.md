@@ -66,6 +66,7 @@ Open your web browser and navigate to [http://127.0.0.1:8000](http://127.0.0.1:8
 
 - 💬 Real-Time Chatting.
 - 🔐 User authentication and authorization.
+- 🛠️ Customizable User Profiles.
 - ⚙️ Easy setup with Docker and local development options.
 - 📡 Pusher API Integration.
 - 🎨 Styling with Tailwind.
