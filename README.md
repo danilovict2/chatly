@@ -75,7 +75,7 @@ Open your web browser and navigate to [http://127.0.0.1:8000](http://127.0.0.1:8
 ### Build assets
 
 ```bash
-npx tailwindcss -i ./views/css/app.css -o ./public/index.css --watch
+npx tailwindcss -i ./views/css/app.css -o ./public/index.css
 ```
 
 ### Build the project
